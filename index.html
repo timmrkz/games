@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Games Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS
+   Deep tatami green surfaces lit by a lamp amber. Amber means show or
+   confirm, coral means hide or destroy, and nothing else is a pure hue.
+   Type: Archivo (display), IBM Plex Sans (body), IBM Plex Mono (labels).
+   ============================================================ */
+:root{
+  --mat:#151B1A;         /* page: deep tatami green, almost black */
+  --panel:#1E2625;       /* cards, panels */
+  --panel-2:#28312F;     /* recessed surfaces: inputs, tags */
+  --ink:#EAEDE7;         /* primary text, warm off-white */
+  --ink-soft:#96A29D;    /* secondary text */
+  --line:#3A4644;        /* borders */
+  --line-soft:#2E3836;   /* quiet dividers */
+  --accent:#E4A356;      /* "show" / primary: lamp amber */
+  --on-accent:#161E1D;   /* text on an amber fill */
+  --alert:#E4705F;       /* "hide" / destructive: warm coral */
+  --alert-soft:#38221F;
+  --r:3px;
+  --chip-track:repeat(auto-fill,minmax(140px,1fr));   /* labels page grid */
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*{box-sizing:border-box}
+html{color-scheme:dark}
+html,body{margin:0;padding:0}
+body{background:var(--mat);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+::placeholder{color:var(--ink-soft);opacity:1}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar{position:sticky;top:0;z-index:40;background:var(--panel);border-bottom:1px solid var(--line)}
+.topbar-in{padding:12px 20px;display:flex;gap:14px;align-items:center}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand button{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left}
+.brand h1{font-size:19px;font-weight:800;letter-spacing:-0.01em;text-transform:uppercase}
+.brand .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:0.04em}
+/* Action buttons sit on the title line. While .searching is set the buttons
+   are hidden and the search field expands across the space they occupied. */
+.actions{display:flex;gap:8px;align-items:stretch;flex:1;justify-content:flex-end;min-width:0}
+/* While searching, everything except the field itself steps aside. */
+.actions.searching .btn{display:none}
+.actions.searching .search .btn{display:inline-flex}
+.actions.searching .menu{display:none}
+
+/* The overflow menu is the same at every width. There is no wide variant, so
+   the header is one layout with nothing to switch between. */
+.menu{position:relative}
+.btn.menu-toggle{display:inline-flex}
+.menu-items{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:50;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:8px;min-width:190px;flex-direction:column;gap:6px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.menu.open .menu-items{display:flex}
+.menu-items .btn{width:100%;text-align:left;border-color:transparent;padding:9px 10px}
+.menu-items .btn:hover{border-color:var(--line)}
+/* Not a button. A line of information, fenced off from the actions above it. */
+.menu-note{border-top:1px solid var(--line);margin-top:4px;padding:9px 10px 3px;
+  font-family:var(--mono);font-size:10.5px;line-height:1.7;letter-spacing:0.04em;color:var(--ink-soft)}
+.menu-note .pending{color:var(--accent)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;align-self:stretch;width:42px;padding:0}
+.icon-btn svg{width:20px;height:20px;display:block}
+.search{display:none;position:relative;flex:1;max-width:560px;min-width:0;align-items:center;gap:6px}
+.actions.searching .search{display:flex}
+.search input{width:100%;font-size:13px;padding:8px 12px 8px 32px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2)}
+.search input:focus,.search input:focus-visible{outline:none;border-color:var(--line)}
+.search > svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--panel);padding:8px 12px;border-radius:var(--r);font-size:13px;font-weight:500;white-space:nowrap}
+.btn:hover{background:var(--panel-2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn-primary:hover{background:#F0B571;border-color:#F0B571}
+.btn-danger{color:var(--alert)}
+.btn-danger:hover{background:var(--alert-soft);border-color:var(--alert)}
+.btn-sm{padding:5px 9px;font-size:12px}
+.btn[aria-current="page"]{border-color:var(--accent);color:var(--accent);background:var(--panel-2)}
+
+/* ============================================================
+   OVERFLOW MENU (mobile only)
+   ============================================================ */
+
+
+/* ============================================================
+   VIEWS — catalog / detail / edit / labels are full pages,
+   only one carries .active at a time.
+   ============================================================ */
+.view{display:none}
+.view.active{display:block}
+.page{padding:20px}
+.pagebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pagebar .spacer{margin-left:auto}
+
+/* ============================================================
+   CATALOG: filter rail + result grid
+   ============================================================ */
+.catalog{padding:20px}
+/* Filter panel: closed by default so the full width goes to the cards. */
+.rail{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+.rail[data-collapsed="true"]{display:none}
+
+/* The chain reads as a sentence: label, connector, label. */
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+.chain-empty{font-size:12px;color:var(--ink-soft)}
+.op{background:transparent;border:1px dashed var(--line);color:var(--accent);border-radius:var(--r);
+  padding:4px 9px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase}
+.op:hover{border-style:solid;border-color:var(--accent)}
+.label-search{width:100%;max-width:280px;padding:7px 10px;margin-bottom:10px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+
+/* filter chip, three states: neutral / include (blue) / exclude (struck red) */
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);padding:4px 8px;border-radius:var(--r);font-size:12.5px}
+.chip .c{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft)}
+.chip:hover{border-color:var(--accent)}
+.chip.inc{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip.inc .c{color:rgba(22,30,29,.62)}
+.chip.exc{background:var(--alert-soft);border-color:var(--alert);color:var(--alert);text-decoration:line-through;text-decoration-thickness:1.5px}
+.chip.exc .c{color:var(--alert)}
+.chip.zero{opacity:.42}
+
+.results-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.results-head .count{font-family:var(--mono);font-size:12px;letter-spacing:0.04em;color:var(--ink-soft)}
+/* Columns always fill the width: a card is at least 320px, and whatever
+   space is left over is shared out between them. No width exceptions. */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:14px}
+/* Each card carries a warm spine on its left edge; hover brings it up full. */
+.card{background:var(--panel);border:1px solid var(--line);border-left:6px solid rgba(228,163,86,.42);border-radius:var(--r);padding:14px 15px;text-align:left;width:100%;display:flex;flex-direction:column;gap:8px}
+.card:hover{border-color:var(--accent);border-left-color:var(--accent)}
+/* The title and summary open the game. It fills the card so the whole area
+   above the labels stays clickable. */
+.card-open{flex:1;display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+  background:transparent;border:0;padding:0;text-align:left;color:inherit;width:100%}
+.card h3{font-size:16.5px;font-weight:700;letter-spacing:-0.005em}
+.card p{margin:0;font-size:13.5px;color:var(--ink-soft)}
+.card .meta{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px}
+.tag-btn{cursor:pointer;font-family:var(--mono)}
+.tag-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tag-btn.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tag{font-family:var(--mono);font-size:10.5px;background:var(--panel-2);border:1px solid var(--line-soft);padding:2px 6px;border-radius:2px;color:var(--ink-soft)}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:38px 24px;text-align:center;background:var(--panel)}
+.empty h3{font-size:17px;margin-bottom:6px}
+.empty p{color:var(--ink-soft);font-size:14px;margin:0 0 16px}
+
+/* ============================================================
+   DETAIL: title, then Core | Progression side by side,
+   labels spread across the full width at the bottom.
+   ============================================================ */
+.dhead{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:20px}
+.dhead h2{font-size:30px;font-weight:800;letter-spacing:-0.02em}
+.dcols{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,8fr);gap:30px;align-items:start;max-width:1500px}
+.dcols.single{grid-template-columns:minmax(0,1fr);max-width:900px}
+.block{border-top:1px solid var(--line);padding-top:14px;margin-bottom:22px}
+.block:first-child{border-top:0;padding-top:0}
+.block > h4{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;font-stretch:118%;margin:0 0 10px}
+.kv{display:grid;grid-template-columns:74px 1fr;gap:5px 12px;font-size:14.5px;margin:0}
+.kv dt{font-family:var(--mono);font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;padding-top:4px}
+.kv dd{margin:0;white-space:pre-wrap}
+.prose{margin:0;white-space:pre-wrap;font-size:14.5px}
+
+/* Variations: a plain list, since they are alternatives rather than steps. */
+.varlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.varlist li{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:10px 12px;font-size:14px;line-height:1.5}
+
+/* label footer: as many columns as the width allows */
+.labelfoot{border-top:1px solid var(--line);margin-top:10px;padding-top:14px}
+.labelfoot > h4{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;font-stretch:118%;margin:0 0 12px}
+.lvals{display:flex;flex-wrap:wrap;gap:6px}
+
+/* ============================================================
+   FORMS (editor + label manager)
+   ============================================================ */
+.form{max-width:840px}
+/* The save action sits at the end of the form, where writing finishes. */
+.form-foot{display:flex;gap:8px;align-items:stretch;border-top:1px solid var(--line);padding-top:14px;margin-top:6px;padding-bottom:24px}
+.form-foot .btn{padding:11px 20px;font-size:14px}
+.field{margin-bottom:16px}
+.field label,.flabel{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+.field input[type=text],.field textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.field textarea{resize:vertical;min-height:60px}
+.hint{font-size:11.5px;color:var(--ink-soft);margin-top:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.repeat-row{display:flex;gap:6px;margin-bottom:6px;align-items:flex-start}
+.repeat-row input[type=text],.repeat-row textarea{flex:1;padding:7px 9px;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);font:inherit;resize:vertical}
+.repeat-row select{padding:7px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);font-size:12px}
+.x{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);width:30px;height:33px;flex:0 0 auto;color:var(--ink-soft)}
+.grip{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);
+  background:var(--panel);border-radius:var(--r);width:30px;height:33px;flex:0 0 auto;
+  color:var(--ink-soft);cursor:grab;touch-action:none}
+.grip:hover{color:var(--ink)}
+.grip:active{cursor:grabbing}
+.var-row.dragging{opacity:.45}
+.x:hover{color:var(--alert);border-color:var(--alert)}
+.pickchip{border:1px solid var(--line);background:var(--panel);padding:4px 9px;border-radius:var(--r);font-size:12.5px}
+.pickchip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.addval{display:flex;gap:5px;margin-top:7px}
+.addval input{flex:1;padding:5px 8px;border:1px dashed var(--line);border-radius:var(--r);background:var(--panel);font-size:12.5px}
+
+/* ---- Labels page ----
+   One card per group. The group name is a heading that happens to be editable,
+   so the page reads as a list of groups rather than a wall of form fields.
+   Chips size themselves to their text, so nothing is clipped or padded out to
+   a false grid. */
+/* Attaching labels in the game editor: the chips already on the game, then
+   one field that searches the list and offers to create what is missing. */
+.label-picker{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.typeahead{position:relative;max-width:420px}
+.typeahead input{width:100%;padding:8px 10px;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);font-size:14px}
+.typeahead input:focus{border-color:var(--accent)}
+.suggestions{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:5px;
+  max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.suggestions.open{display:block}
+.suggestion{display:block;width:100%;text-align:left;background:transparent;border:0;
+  padding:8px 9px;border-radius:var(--r);font-size:13.5px;color:var(--ink)}
+.suggestion:hover,.suggestion.active{background:var(--panel-2)}
+.suggestion.new{color:var(--accent)}
+
+.lab-group{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px 18px;margin-bottom:14px}
+.lab-group-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  padding-bottom:10px;border-bottom:1px solid var(--line-soft)}
+.lab-group-head input{flex:1;min-width:0;background:transparent;border:1px solid transparent;
+  border-radius:var(--r);padding:4px 7px;margin-left:-7px;
+  font-family:var(--display);font-stretch:112%;font-size:16px;font-weight:700;color:var(--ink)}
+.lab-group-head input:hover:not(:disabled){border-color:var(--line);background:var(--panel-2)}
+.lab-group-head input:focus{border-color:var(--accent);background:var(--panel-2)}
+.lab-group-head input:disabled{color:var(--ink-soft)}
+.lab-group-head .count{font-family:var(--mono);font-size:11px;color:var(--ink-soft);white-space:nowrap}
+.lab-group-head .btn{padding:5px 10px;font-size:12px}
+
+/* 140px is the widest minimum that still fits two columns inside a card on a
+   phone. Chips, the add-label field and the add-group field all sit on this
+   one track, so every box on the page lines up with the same columns. */
+.lab-chips{display:grid;grid-template-columns:var(--chip-track);gap:8px}
+.chip-edit{display:inline-flex;align-items:center;background:var(--panel-2);
+  border:1px solid var(--line);border-radius:var(--r)}
+.chip-edit:focus-within{border-color:var(--accent)}
+.chip-edit input{flex:1;width:100%;min-width:0;border:0;background:transparent;color:var(--ink);
+  padding:6px 2px 6px 10px;font-size:13px}
+.chip-edit input:focus{outline:none}
+.chip-edit button{border:0;background:transparent;color:var(--ink-soft);
+  padding:6px 9px;font-size:14px;line-height:1}
+.chip-edit button:hover{color:var(--alert)}
+
+.lab-add{display:grid;grid-template-columns:var(--chip-track);gap:8px;margin-top:14px}
+.lab-new-group{display:grid;grid-template-columns:var(--chip-track);gap:8px;
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+/* Two columns wide, which is the whole card on a phone and a readable field
+   on a desktop, without ever landing between two columns. */
+.lab-add input,.lab-new-group input{grid-column:span 2;width:100%;padding:7px 11px;
+  background:transparent;border:1px dashed var(--line);border-radius:var(--r);font-size:13px}
+.lab-add input:focus,.lab-new-group input:focus{border-style:solid;border-color:var(--accent)}
+
+/* Explanatory copy at the top of a page. The opening sentence always shows,
+   with the toggle running on inline at the end of it. */
+.explainer{max-width:64ch;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.explainer summary{cursor:pointer;list-style:none;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.explainer summary::-webkit-details-marker{display:none}
+.explainer .more,.explainer .less{color:var(--accent);white-space:nowrap}
+.explainer .more:hover,.explainer .less:hover{text-decoration:underline}
+.explainer .less{display:none}
+.explainer[open] .more{display:none}
+.explainer[open] .less{display:inline}
+.explainer-body{padding-top:12px}
+.explainer p{margin:0 0 9px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.explainer-body p:last-child{margin-bottom:0}
+.explainer strong{color:var(--ink);font-weight:600}
+
+/* ============================================================
+   CONFIRM DIALOG
+   Replaces window.confirm, which some embedded contexts block.
+   ============================================================ */
+.modal{position:fixed;inset:0;z-index:90;background:rgba(8,12,11,.68);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal[hidden]{display:none}
+.modal-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;width:100%;max-width:440px}
+.modal-box h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.modal-box p{margin:0 0 18px;font-size:14px;color:var(--ink-soft)}
+.modal-actions{display:flex;gap:8px;align-items:stretch;justify-content:flex-end;flex-wrap:wrap}
+.modal-actions .btn{padding:9px 16px;font-size:13.5px}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(12px);background:var(--ink);color:var(--mat);padding:10px 16px;border-radius:var(--r);font-size:13.5px;z-index:80;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:980px){ .dcols{grid-template-columns:1fr;gap:0} }
+@media (max-width:900px){
+  .catalog{padding:14px}
+  .page{padding:14px}
+  .brand h1{font-size:16px}
+  .topbar-in{padding:10px 14px;gap:10px}
+  .dhead h2{font-size:24px}
+  .kv{grid-template-columns:1fr;gap:1px 0}
+  .kv dd{margin-bottom:8px}
+  .row2{grid-template-columns:1fr}
+
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ============================================================
+   PRINT — cut-out cards for the training dice
+   ============================================================ */
+.printarea{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;color:#000}
+  .printarea{color:#000}
+  .topbar,.view,.toast,  .printarea{display:block}
+  .pcards{display:grid;grid-template-columns:1fr 1fr;gap:8mm}
+  .pcard{border:1.5pt solid #000;border-radius:2mm;padding:5mm;break-inside:avoid;page-break-inside:avoid;min-height:60mm;font-size:9.5pt;line-height:1.35}
+  .pcard h3{font-family:var(--display);font-size:13pt;margin:0 0 2mm}
+  .pcard .pline{margin:0 0 2mm}
+  .pcard dl{margin:0;display:grid;grid-template-columns:18mm 1fr;gap:0.8mm 3mm}
+  .pcard dt{font-family:var(--mono);font-size:7pt;text-transform:uppercase;letter-spacing:.04em}
+  .pcard dd{margin:0}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <button id="home"><h1>Games Catalog</h1></button>
+    </div>
+    <div class="actions" id="actions">
+      <div class="search" id="searchWrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Search games" aria-label="Search games">
+        <button class="btn" id="searchClose">Close</button>
+      </div>
+      <button class="btn icon-btn" id="searchToggle" aria-label="Search games" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+      <button class="btn btn-primary" id="btnNew">New game</button>
+      <div class="menu" id="menu">
+        <button class="btn icon-btn menu-toggle" id="btnMore" aria-label="More actions" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg>
+        </button>
+        <div class="menu-items">
+          <button class="btn" id="btnLabels">Labels</button>
+          <button class="btn" id="btnExport">Export</button>
+          <button class="btn" id="btnImport">Import</button>
+          <button class="btn" id="btnClearLocal">Discard local changes</button>
+          <div class="menu-note" id="buildNote"></div>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="application/json,.json" hidden>
+    </div>
+  </div>
+</header>
+
+<!-- ============ CATALOG ============ -->
+<section class="view active" id="viewCatalog">
+  <div class="catalog">
+    <div class="results-head">
+      <button class="btn btn-sm" id="railToggle" aria-expanded="false" aria-controls="rail">Filters</button>
+      <span class="count" id="count"></span>
+      <span class="count" id="activeFilters"></span>
+      <button class="btn btn-sm" id="btnClear" style="margin-left:auto">Clear all</button>
+    </div>
+    <aside class="rail" id="rail" data-collapsed="true">
+      <div class="chain" id="chain"></div>
+      <input type="text" class="label-search" id="labelSearch" placeholder="Search labels" autocomplete="off">
+      <div class="chips" id="labelList"></div>
+    </aside>
+    <main>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" hidden>
+        <h3>Nothing matches those labels</h3>
+        <p>Loosen a filter, or add a game that fills the gap.</p>
+        <button class="btn btn-primary" id="emptyNew">New game</button>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ DETAIL ============ -->
+<section class="view" id="viewDetail">
+  <div class="page">
+    <div class="pagebar">
+      <button class="btn" id="btnBack">&larr; Catalog</button>
+      <span class="spacer"></span>
+      <button class="btn" id="btnEdit">Edit</button>
+      <button class="btn" id="btnDup">Duplicate</button>
+      <button class="btn btn-danger" id="btnDelete">Delete</button>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<section class="view" id="viewEdit">
+  <div class="page">
+    <div class="pagebar">
+      <button class="btn" id="btnCancelEdit">&larr; Cancel</button>
+    </div>
+    <h2 id="editTitle" style="font-size:22px;margin-bottom:16px">New game</h2>
+    <div class="form" id="editBody"></div>
+    <div class="form form-foot">
+      <button class="btn btn-primary" id="btnSave">Save game</button>
+      <button class="btn" id="btnCancelEditFoot">Cancel</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LABEL MANAGER ============ -->
+<section class="view" id="viewLabels">
+  <div class="page">
+    <div class="pagebar"><button class="btn" id="btnCloseLabels">&larr; Catalog</button></div>
+    <h2 style="font-size:22px;margin-bottom:12px">Labels</h2>
+    <div class="form" id="labelBody"></div>
+  </div>
+</section>
+
+<!-- ============ CONFIRM DIALOG ============ -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div class="printarea" id="printarea"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================================================================
+   GAMES CATALOG — single-file app, no build step, no server.
+
+   DATA MODEL (stored in localStorage under KEY, exported as JSON)
+   {
+     schemaVersion: 10,
+     labels: [ { id, name } ],       // one flat list, sorted by name
+     groups: [ { id, name, labels:[labelId] } ],  // organisation only, for the
+                                     // Labels page. Filtering never sees them.
+     games:  [ {
+       id, title,
+       summary,                      // one line, shown on the catalog card
+       setup, goal,                  // the invariant core
+       winCondition, resetRule,
+       variations: [ text ],         // free text, one line per way to change it
+       story,                        // framing and mat cues
+       labels: [ labelId ],          // a flat list, no groups
+       createdAt, updatedAt
+     } ]
+   }
+
+   The same shape is used for games.json, for an export, and for the built-in
+   catalog. Storage is described above the storage block below.
+
+   FILTERING
+   The filter is a chain of labels joined by connectors: warm up AND grip fight
+   OR turtle. Each connector belongs to the pair it sits between, there is no
+   global mode. The chain is evaluated strictly left to right, no precedence,
+   so it reads the way it is written. Free-text search applies on top.
+   ============================================================================ */
+
+/* Bump on every change. Shown next to the title, so you can tell at a
+   glance whether the page you are looking at is the current build. */
+const BUILD = "2026-09-11.3";
+
+const KEY = "bjj-games-catalog";
+const PUBLISHED = "games.json";   // optional, sits next to index.html
+const SCHEMA = 10;
+
+/* ---------------------------------------------------------------------------
+   Small helpers
+   --------------------------------------------------------------------------- */
+const $  = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+const uid = prefix => (prefix || "") + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const now = () => new Date().toISOString();
+
+/** Escape a value for safe insertion into an HTML template string. */
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+/** Turn a human label into a stable id. */
+function slug(s){
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 24) || uid("v");
+}
+
+/* Resolver for the dialog currently on screen, or null. */
+let pendingAsk = null;
+
+/**
+ * In-app replacement for window.confirm, which is blocked in sandboxed
+ * embeds and there fails silently. Returns the value of the button pressed.
+ * By convention the LAST choice is the safe one: Escape and a backdrop
+ * click both resolve to it.
+ */
+function ask(title, text, choices){
+  return new Promise(resolve => {
+    const modal = $("#modal");
+    $("#modalTitle").textContent = title;
+    $("#modalText").textContent = text;
+
+    const finish = value => {
+      modal.hidden = true;
+      pendingAsk = null;
+      resolve(value);
+    };
+
+    const actions = $("#modalActions");
+    actions.innerHTML = "";
+    choices.forEach(choice => {
+      const button = document.createElement("button");
+      button.className = "btn" + (choice.kind ? " btn-" + choice.kind : "");
+      button.textContent = choice.label;
+      button.onclick = () => finish(choice.value);
+      actions.appendChild(button);
+    });
+
+    pendingAsk = () => finish(choices[choices.length - 1].value);
+    modal.hidden = false;
+    const first = actions.querySelector(".btn");
+    if(first) first.focus();
+  });
+}
+
+let toastTimer;
+/** Brief status message at the bottom of the screen. */
+function toast(msg){
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+/* ---------------------------------------------------------------------------
+   Seed data — used only on first run, when localStorage is empty.
+   --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   The built-in catalog
+
+   Used when games.json is not reachable, which is the case in a preview and
+   when the page is opened straight from disk. Kept identical to the published
+   file, so both layers agree on ids.
+   --------------------------------------------------------------------------- */
+const BUILT_IN = {
+    "schemaVersion": 10,
+    "labels": [
+      {
+        "id": "adult",
+        "name": "Adult"
+      },
+      {
+        "id": "anaconda-choke",
+        "name": "Anaconda Choke"
+      },
+      {
+        "id": "arm-bar",
+        "name": "Arm Bar"
+      },
+      {
+        "id": "arm-drag",
+        "name": "Arm Drag"
+      },
+      {
+        "id": "back-control",
+        "name": "Back Control"
+      },
+      {
+        "id": "chest-to-chest",
+        "name": "Chest To Chest"
+      },
+      {
+        "id": "closed-guard",
+        "name": "Closed Guard"
+      },
+      {
+        "id": "cloth",
+        "name": "Cloth"
+      },
+      {
+        "id": "collar-tie",
+        "name": "Collar Tie"
+      },
+      {
+        "id": "darce-choke",
+        "name": "Darce Choke"
+      },
+      {
+        "id": "dodge-ball",
+        "name": "Dodge Ball"
+      },
+      {
+        "id": "dog-fight",
+        "name": "Dog Fight"
+      },
+      {
+        "id": "double-leg",
+        "name": "Double Leg"
+      },
+      {
+        "id": "foot-sweep",
+        "name": "Foot Sweep"
+      },
+      {
+        "id": "front-headlock",
+        "name": "Front Headlock"
+      },
+      {
+        "id": "full-guard",
+        "name": "Full Guard"
+      },
+      {
+        "id": "full-mount",
+        "name": "Full Mount"
+      },
+      {
+        "id": "grip-fight",
+        "name": "Grip Fight"
+      },
+      {
+        "id": "guard",
+        "name": "Guard"
+      },
+      {
+        "id": "guillotine-choke",
+        "name": "Guillotine Choke"
+      },
+      {
+        "id": "half-guard",
+        "name": "Half Guard"
+      },
+      {
+        "id": "knee-on-belly",
+        "name": "Knee On Belly"
+      },
+      {
+        "id": "laundry-clips",
+        "name": "Laundry Clips"
+      },
+      {
+        "id": "marker-cones",
+        "name": "Marker Cones"
+      },
+      {
+        "id": "marker-plates",
+        "name": "Marker Plates"
+      },
+      {
+        "id": "maxi",
+        "name": "Maxi"
+      },
+      {
+        "id": "midi",
+        "name": "Midi"
+      },
+      {
+        "id": "mini",
+        "name": "Mini"
+      },
+      {
+        "id": "north-south",
+        "name": "North South"
+      },
+      {
+        "id": "pool-noodle",
+        "name": "Pool Noodle"
+      },
+      {
+        "id": "rear-naked-choke",
+        "name": "Rear Naked Choke"
+      },
+      {
+        "id": "rope",
+        "name": "Rope"
+      },
+      {
+        "id": "scramble",
+        "name": "Scramble"
+      },
+      {
+        "id": "single-leg",
+        "name": "Single Leg"
+      },
+      {
+        "id": "tennis-ball",
+        "name": "Tennis Ball"
+      },
+      {
+        "id": "turtle",
+        "name": "Turtle"
+      },
+      {
+        "id": "warm-up",
+        "name": "Warm Up"
+      },
+      {
+        "id": "wrestling",
+        "name": "Wrestling"
+      }
+    ],
+    "groups": [
+      {
+        "id": "audience",
+        "name": "Audience",
+        "labels": [
+          "mini",
+          "midi",
+          "maxi",
+          "adult"
+        ]
+      },
+      {
+        "id": "focus",
+        "name": "Focus",
+        "labels": [
+          "arm-drag",
+          "back-control",
+          "chest-to-chest",
+          "closed-guard",
+          "collar-tie",
+          "dog-fight",
+          "double-leg",
+          "foot-sweep",
+          "front-headlock",
+          "full-guard",
+          "full-mount",
+          "grip-fight",
+          "guard",
+          "half-guard",
+          "knee-on-belly",
+          "north-south",
+          "scramble",
+          "single-leg",
+          "turtle",
+          "warm-up",
+          "wrestling"
+        ]
+      },
+      {
+        "id": "submission",
+        "name": "Submission",
+        "labels": [
+          "anaconda-choke",
+          "arm-bar",
+          "darce-choke",
+          "guillotine-choke",
+          "rear-naked-choke"
+        ]
+      },
+      {
+        "id": "equipment",
+        "name": "Equipment",
+        "labels": [
+          "cloth",
+          "dodge-ball",
+          "laundry-clips",
+          "marker-cones",
+          "marker-plates",
+          "pool-noodle",
+          "rope",
+          "tennis-ball"
+        ]
+      }
+    ],
+    "games": [
+      {
+        "id": "treasure-chest",
+        "title": "Treasure Chest",
+        "summary": "One player hides a ball under their turtle, the other has to take the ball away.",
+        "setup": "One player starts in turtle position with a dodge ball tucked underneath them. The other player starts next to them.",
+        "goal": "The top player has to take the ball away. The bottom player has to keep the ball hidden and hold on to it.",
+        "winCondition": "Taking the ball away scores for the top player. Holding on to the ball for 60 seconds scores for the bottom player.",
+        "resetRule": "Swap roles once the ball is taken or the time is up.",
+        "variations": [
+          "Once taken away, the ball has to be carried over to the end of the mat, all the while the bottom player can still try to get the ball back into hiding.",
+          "The bottom player cannot use their hands, but only their ellbows, chest and knees.",
+          "The top player starts on the back with one or two hooks in.",
+          "For kids, there might be two top players against one bottom player.",
+          "The bottom player has to start laying on the side and is allowed to recover into turtle."
+        ],
+        "story": "The dragon is sitting on its treasure and will not give it up. Or, you are the treasure chest and have to keep the treasure safe.",
+        "labels": [
+          "mini",
+          "midi",
+          "maxi",
+          "turtle",
+          "back-control",
+          "dodge-ball",
+          "wrestling"
+        ],
+        "createdAt": "2026-08-31T12:54:05.690Z",
+        "updatedAt": "2026-08-31T13:04:35.633Z"
+      },
+      {
+        "id": "cops-and-robbers",
+        "title": "Cops And Robbers",
+        "summary": "The robbers trie to touch one another, while the cops try to keep them separated.",
+        "setup": "The robbers face each other, on hands and knees, on either side of a mats. The cops are in front of the robbers, one cop facing one robber.",
+        "goal": "The robbers have to touch each other. The cops have to keep the robbers separated.",
+        "winCondition": "As soon as two robbers establish body contact with one another, the game is over and the robbers won.",
+        "resetRule": "After the robbers established body contact, the game starts from scratch.",
+        "variations": [
+          "If there are not enough players to form pairs of robbers, the robbers' goal could be to touch the wall at the other end of the mats.",
+          "The cops start with a body lock grip around the waste.",
+          "The cops start with a seat belt grip around the shoulders.",
+          "The cops start in back control."
+        ],
+        "story": "The cops have to catch the robbers and prevent them from teaming up.",
+        "labels": [
+          "back-control",
+          "wrestling",
+          "midi",
+          "maxi",
+          "adult"
+        ],
+        "createdAt": "2026-08-27T20:08:47.477Z",
+        "updatedAt": "2026-08-31T15:04:49.044Z"
+      },
+      {
+        "id": "baby-monkey",
+        "title": "Baby Monkey",
+        "summary": "The back player only scores while the chest stays glued to the partner's back.",
+        "setup": "Bottom player on all fours in turtle. Top player starts on the back with both arms around the chest.",
+        "goal": "Top: keep chest-to-back contact and charge the counter to 10.\nBottom: break the contact and stand up or turn in.",
+        "winCondition": "Top scores when the count reaches 10. Bottom scores by breaking contact for 3 seconds.",
+        "resetRule": "After any score, swap roles and restart from turtle.",
+        "variations": [
+          "Counting continues only while the chest touches the back.",
+          "Top may use one arm only, and the count goes to 15.",
+          "Bottom starts half turned, so the top has to rebuild the contact first.",
+          "Shrink the square by a third."
+        ],
+        "story": "The little monkey has to hold on to its mother while she climbs. If it lets go, it falls. Cue: 'Halt dich fest!'",
+        "labels": [
+          "midi",
+          "maxi",
+          "back-control",
+          "chest-to-chest",
+          "turtle",
+          "rear-naked-choke"
+        ],
+        "createdAt": "2026-09-09T11:37:49.096Z",
+        "updatedAt": "2026-09-09T11:37:49.096Z"
+      },
+      {
+        "id": "river-crossing",
+        "title": "River Crossing",
+        "summary": "One player has to cross a taped line on the mat while the other keeps them on their side.",
+        "setup": "Pairs facing each other, kneeling, on either side of a mat line.",
+        "goal": "Crosser: get any body part fully past the line.\nBlocker: hold them on their own side for the whole round.",
+        "winCondition": "One point per crossing. Highest count when time runs out.",
+        "resetRule": "After a crossing, both return to their starting side.",
+        "variations": [
+          "Both players stay on their knees.",
+          "Only hips across the line count, not a hand.",
+          "Add a second blocker and widen the crossing zone so both fit.",
+          "The smaller player always takes the crossing role."
+        ],
+        "story": "The river is cold and the bridge is guarded.",
+        "labels": [
+          "mini",
+          "midi",
+          "dog-fight",
+          "scramble",
+          "warm-up"
+        ],
+        "createdAt": "2026-09-09T11:37:49.096Z",
+        "updatedAt": "2026-09-09T11:37:49.096Z"
+      },
+      {
+        "id": "two-on-one",
+        "title": "Two On One",
+        "summary": "Establish two grips on one arm and move your partner around.",
+        "setup": "Both players standing and facing each other, each holding one of the partner's wrists.",
+        "goal": "Get both hands connected onto one of your partner's arms. Then move your partner around.",
+        "winCondition": "Holding two hands on one arm for three seconds scores.",
+        "resetRule": "After a score, both reset to a single wrist grip each.",
+        "variations": [
+          "You can only hold on to the hands and the forearms or your partner.",
+          "You have to use your shoulder and/or your head to move your partner around."
+        ],
+        "story": "",
+        "labels": [
+          "maxi",
+          "adult",
+          "arm-drag",
+          "grip-fight",
+          "wrestling"
+        ],
+        "createdAt": "2026-08-31T11:46:50.445Z",
+        "updatedAt": "2026-08-31T13:05:25.658Z"
+      },
+      {
+        "id": "knee-tap",
+        "title": "Knee Tap",
+        "summary": "Get one wrist behind your partner's knee.",
+        "setup": "Both players stand next to each other, in an over under clinch, one arm over and one arm under.",
+        "goal": "Land a wrist behind either of your partner's knees.",
+        "winCondition": "A wrist behind a knee for 3 seconds wins.",
+        "resetRule": "Every knee tap resets to the over under clinch.",
+        "variations": [
+          "Only the underhook side arm may score.",
+          "Only the far knee counts can be attacked.",
+          "Instead of over under, everyone gets one grip on their partner's wrist.",
+          "For kids, the 3 seconds rule does not work well. Use laundry clips attached to their pants around their knees. The goal becomes to snatch the partners laundry clips."
+        ],
+        "story": "",
+        "labels": [
+          "midi",
+          "maxi",
+          "adult",
+          "dog-fight",
+          "single-leg",
+          "laundry-clips",
+          "wrestling"
+        ],
+        "createdAt": "2026-08-31T11:46:50.445Z",
+        "updatedAt": "2026-08-31T13:04:55.041Z"
+      },
+      {
+        "id": "merry-go-round",
+        "title": "Merry Go Round",
+        "summary": "The top player circles to get around the legs, the bottom player turns with them and stays facing.",
+        "setup": "Bottom player in open guard with the feet towards the top player, either sitting up or lying on their back. Top player in front of them, standing or on their knees.",
+        "goal": "Top: circle around the legs and get to the side or the back.\nBottom: keep turning so the legs stay between the two of you.",
+        "winCondition": "The top player scores by getting past the legs and putting their chest on the side or the back. The bottom player scores by staying face to face for the whole round.",
+        "resetRule": "After a score, reset face to face and swap roles.",
+        "variations": [
+          "The bottom player sits upright, leans slightly forward and turns on their seat, pushing off with a hand and a foot.",
+          "The bottom player lies flat on their back and turns on their shoulders, keeping the feet pointed at the top player.",
+          "Lying flat, the bottom player puts their feet on the partner's legs or hips and uses their movement to be carried around.",
+          "The top player may only circle in one direction, so changing direction becomes its own problem to solve later.",
+          "No hands for the bottom player. Turning with legs and hips only."
+        ],
+        "story": "",
+        "labels": [
+          "midi",
+          "maxi",
+          "adult",
+          "guard",
+          "back-control"
+        ],
+        "createdAt": "2026-09-09T00:00:00.000Z",
+        "updatedAt": "2026-09-09T00:00:00.000Z"
+      },
+      {
+        "id": "knee-wrestling",
+        "title": "Knee Wrestling",
+        "summary": "Both on their knees, put your partner over on their side without going over yourself.",
+        "setup": "Both players kneeling and facing each other, close enough to reach, hands free.",
+        "goal": "Put your partner down on their side or their back while staying up yourself.",
+        "winCondition": "A point when your partner lands on their side or back. Nobody scores if you both go over together.",
+        "resetRule": "Back to kneeling and facing each other after every point.",
+        "variations": [
+          "Hands behind the back. Shoulders and chest only, which is where the bear comes from.",
+          "Both players start with a collar tie.",
+          "Both players hold one cloth between them and may only pull and push on that.",
+          "You may not sit back on your heels, so nobody parks there and waits.",
+          "Give each pair their own square, so a fall never lands on the pair next door."
+        ],
+        "story": "Two bears meet on a narrow path and neither wants to step aside. Or two sumo in the ring, whoever goes over first loses.",
+        "labels": [
+          "mini",
+          "wrestling"
+        ],
+        "createdAt": "2026-09-09T00:00:00.000Z",
+        "updatedAt": "2026-09-09T00:00:00.000Z"
+      },
+      {
+        "id": "gatekeeper",
+        "title": "Gatekeeper",
+        "summary": "Seated against standing. The top player hunts side control or mount, the bottom player hunts four connections or their feet.",
+        "setup": "Bottom player seated with the legs in front. Top player standing, facing them, within reach.",
+        "goal": "Top: get to side control or mount.\nBottom: build four connections onto the top player's legs, or stand up.",
+        "winCondition": "The top player scores by holding side control or mount for three seconds. The bottom player scores by holding four connections for three seconds, or by standing up facing them.",
+        "resetRule": "Back to seated and standing after every score. Swap roles each round.",
+        "variations": [
+          "Four connections are not enough any more, they have to turn into a sweep. Name the sweep before the round, a dummy sweep or a knee reap.",
+          "The top player may only circle and may not drive straight in, which is Merry Go Round with the passing goals added.",
+          "The bottom player may not use their hands. Connections with legs and hips only.",
+          "Standing up only counts if the bottom player comes up facing, not by turning away.",
+          "The top player starts already with both hands on the shins."
+        ],
+        "story": "",
+        "labels": [
+          "maxi",
+          "adult",
+          "guard",
+          "full-mount"
+        ],
+        "createdAt": "2026-09-09T00:00:00.000Z",
+        "updatedAt": "2026-09-09T00:00:00.000Z"
+      }
+    ]
+  };
+
+/** A fresh copy, so nothing can write through to the constant. */
+function builtInCatalog(){
+  return JSON.parse(JSON.stringify(BUILT_IN));
+}
+
+/* ---------------------------------------------------------------------------
+   Storage
+
+   Two layers. The base is games.json fetched from alongside index.html, or the
+   built-in catalog when that file is absent. On top sits the local layer in
+   localStorage, holding only what THIS browser has changed: games, labels and
+   groups added or edited here, and the ids of ones deleted here.
+
+   Storing the difference rather than the merged result is what lets a fix in
+   games.json reach a browser that already has the catalog. Anything nobody has
+   touched locally simply follows the published file. Export writes the merged
+   state, so committing it as games.json publishes exactly what you see.
+   --------------------------------------------------------------------------- */
+
+/** Coerce a catalog, from the published file or an import, into a valid shape. */
+function normalize(store){
+  const labels = (Array.isArray(store.labels) ? store.labels : [])
+    .map(l => ({ id: l.id || slug(l.name || ""), name: (l.name || "").trim() }))
+    .filter(l => l.name);
+  sortLabels(labels);
+  const known = labels.map(l => l.id);
+
+  const filed = {};
+  const groups = (Array.isArray(store.groups) ? store.groups : [])
+    .map(g => ({ id: g.id || slug(g.name || ""), name: (g.name || "").trim(), labels: (g.labels || []).slice() }))
+    .filter(g => g.name);
+
+  // A label belongs to one group at most, and only to a group if it exists.
+  groups.forEach(group => {
+    group.labels = group.labels.filter(id => {
+      if(filed[id] || known.indexOf(id) < 0) return false;
+      filed[id] = true;
+      return true;
+    });
+  });
+
+  const games = (Array.isArray(store.games) ? store.games : []).map(g => ({
+    id: g.id || uid("g"),
+    title: (g.title || "Untitled").trim(),
+    summary: g.summary || "",
+    setup: g.setup || "",
+    goal: g.goal || "",
+    winCondition: g.winCondition || "",
+    resetRule: g.resetRule || "",
+    variations: (Array.isArray(g.variations) ? g.variations : [])
+      .map(v => String(v || "").trim()).filter(Boolean),
+    story: g.story || "",
+    labels: (Array.isArray(g.labels) ? g.labels : []).filter(id => known.indexOf(id) >= 0),
+    createdAt: g.createdAt || now(),
+    updatedAt: g.updatedAt || now()
+  }));
+
+  return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
+}
+
+/** The published catalog, or the built-in one when there is no published file. */
+async function loadBase(){
+  try{
+    // A timestamp, not the build number. Pages and any CDN in front of it will
+    // happily serve a stale games.json for minutes otherwise, and the data
+    // changes far more often than the build does.
+    const res = await fetch(PUBLISHED + "?t=" + Date.now(), { cache: "no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const published = normalize(await res.json());
+    if(!published.games.length && !published.labels.length) throw new Error("empty");
+    publishedFound = true;
+    return published;
+  }catch(err){
+    return normalize(builtInCatalog());
+  }
+}
+
+const EMPTY_LOCAL = () => ({
+  games: [], deletedGames: [], labels: [], deletedLabels: [], groups: [], deletedGroups: []
+});
+
+/** Read the local layer. Anything unreadable counts as no local changes. */
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return EMPTY_LOCAL();
+    const local = (JSON.parse(raw) || {}).local;
+    if(!local) return EMPTY_LOCAL();
+    const list = key => Array.isArray(local[key]) ? local[key] : [];
+    return {
+      games: list("games"), deletedGames: list("deletedGames"),
+      labels: list("labels"), deletedLabels: list("deletedLabels"),
+      groups: list("groups"), deletedGroups: list("deletedGroups")
+    };
+  }catch(err){
+    console.warn("Could not read local changes.", err);
+    return EMPTY_LOCAL();
+  }
+}
+
+/** Base, minus what was deleted here, with local versions winning. */
+function mergeLocal(baseStore, local){
+  const pick = (baseList, localList, deleted) => {
+    const byId = {};
+    localList.forEach(item => { byId[item.id] = item; });
+    const kept = baseList
+      .filter(item => deleted.indexOf(item.id) < 0)
+      .map(item => byId[item.id] || item);
+    const added = localList.filter(item => !baseList.some(b => b.id === item.id));
+    return added.concat(kept);
+  };
+
+  // Deep copy, or the merge would hand back the very objects the base holds.
+  // Editing one in place would then quietly change the base too, the diff
+  // would see no difference, and the edit would vanish on the next load.
+  const copy = list => JSON.parse(JSON.stringify(list));
+
+  const labels = copy(pick(baseStore.labels, local.labels, local.deletedLabels));
+  sortLabels(labels);
+  const groups = copy(pick(baseStore.groups, local.groups, local.deletedGroups));
+  const games = copy(pick(baseStore.games, local.games, local.deletedGames));
+
+  // A label deleted here must not linger on a game or in a group.
+  const known = labels.map(l => l.id);
+  groups.forEach(g => { g.labels = g.labels.filter(id => known.indexOf(id) >= 0); });
+  games.forEach(g => { g.labels = (g.labels || []).filter(id => known.indexOf(id) >= 0); });
+
+  return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
+}
+
+/** What this browser has changed, worked out against the base. */
+function localChanges(){
+  const same = (x, y) => JSON.stringify(x) === JSON.stringify(y);
+
+  const diff = (current, baseList) => {
+    const byId = {};
+    baseList.forEach(item => { byId[item.id] = item; });
+    return {
+      changed: current.filter(item => !byId[item.id] || !same(byId[item.id], item)),
+      deleted: baseList.filter(item => !current.some(c => c.id === item.id)).map(item => item.id)
+    };
+  };
+
+  const games = diff(db.games, base.games);
+  const labels = diff(db.labels, base.labels);
+  const groups = diff(db.groups, base.groups);
+
+  return {
+    games: games.changed, deletedGames: games.deleted,
+    labels: labels.changed, deletedLabels: labels.deleted,
+    groups: groups.changed, deletedGroups: groups.deleted
+  };
+}
+
+/** How many things differ from the published catalog. */
+function localChangeCount(){
+  const local = localChanges();
+  return local.games.length + local.deletedGames.length
+       + local.labels.length + local.deletedLabels.length
+       + local.groups.length + local.deletedGroups.length;
+}
+
+function save(){
+  // Before startup finishes there is nothing to compare against, and writing
+  // then would record the whole catalog as local changes.
+  if(!base || !db) return;
+  try{
+    localStorage.setItem(KEY, JSON.stringify({ schemaVersion: SCHEMA, local: localChanges() }));
+    updateBuildNote();
+  }catch(err){
+    toast("Could not save. Browser storage may be full.");
+    console.error(err);
+  }
+}
+
+let publishedFound = false;
+let base = null;
+let db = null;
+
+/* ---------------------------------------------------------------------------
+   Filter state
+   --------------------------------------------------------------------------- */
+let query = "";       // free-text search over games
+let labelQuery = "";  // search over the label list in the filter panel
+let currentId = null; // game shown on the detail page
+let draft = null;     // working copy while editing
+let editingExisting = false;
+
+/** Chip click: neutral -> include -> exclude -> neutral. */
+/* ---------------------------------------------------------------------------
+   Labels
+   --------------------------------------------------------------------------- */
+
+/** Alphabetical, with numbers read as numbers so "Level 2" precedes "Level 10". */
+function sortLabels(list){
+  list.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" }));
+  return list;
+}
+
+function labelName(id){
+  const label = db.labels.find(l => l.id === id);
+  return label ? label.name : id;
+}
+
+/** One game's labels, in alphabetical order. */
+function gameLabels(game){
+  return (game.labels || []).slice()
+    .sort((a, b) => labelName(a).localeCompare(labelName(b), undefined, { numeric: true, sensitivity: "base" }));
+}
+
+/** The group a label sits in, or null when it is ungrouped. */
+function groupOf(id){
+  return db.groups.find(g => g.labels.indexOf(id) >= 0) || null;
+}
+
+/** Labels that belong to no group, kept in alphabetical order. */
+function ungroupedLabels(){
+  return db.labels.filter(l => !groupOf(l.id));
+}
+
+/** How many games carry a label. */
+function labelUsage(id){
+  return db.games.filter(g => (g.labels || []).indexOf(id) >= 0).length;
+}
+
+/* ---------------------------------------------------------------------------
+   The filter chain
+
+   A list of links, each { id, op }, where op is the connector sitting BEFORE
+   that link. The first link has no connector. Evaluation runs strictly left to
+   right with no precedence, so "a and b or c" means "(a and b) or c", which is
+   what it looks like when you read it.
+   --------------------------------------------------------------------------- */
+let chain = [];
+
+function evaluateChain(game, links){
+  if(!links.length) return true;
+  const carries = id => (game.labels || []).indexOf(id) >= 0;
+  let result = carries(links[0].id);
+  for(let i = 1; i < links.length; i++){
+    result = links[i].op === "or" ? (result || carries(links[i].id)) : (result && carries(links[i].id));
+  }
+  return result;
+}
+
+/** The chain written out. Brackets appear only when both connectors are in play. */
+function chainText(){
+  if(!chain.length) return "";
+  const mixed = chain.some(l => l.op === "and") && chain.some(l => l.op === "or");
+  let out = labelName(chain[0].id);
+  for(let i = 1; i < chain.length; i++){
+    if(mixed && i > 1) out = "(" + out + ")";
+    out = out + " " + chain[i].op + " " + labelName(chain[i].id);
+  }
+  return out;
+}
+
+function inChain(id){ return chain.some(l => l.id === id); }
+
+function addToChain(id){
+  if(inChain(id)) return;
+  chain.push({ id: id, op: chain.length ? "and" : null });
+  renderCatalog();
+}
+
+function removeFromChain(index){
+  chain.splice(index, 1);
+  if(chain.length) chain[0].op = null;   // the new first link cannot have a connector
+  renderCatalog();
+}
+
+function flipConnector(index){
+  chain[index].op = chain[index].op === "and" ? "or" : "and";
+  renderCatalog();
+}
+
+function matchesQuery(game){
+  if(!query) return true;
+  const haystack = [
+    game.title, game.summary, game.setup, game.goal,
+    game.winCondition, game.resetRule, game.story,
+    (game.variations || []).join(" "),
+    (game.labels || []).map(labelName).join(" ")
+  ].join(" ").toLowerCase();
+  return query.toLowerCase().split(/\s+/).filter(Boolean).every(term => haystack.includes(term));
+}
+
+/**
+ * Does this game survive the active filters?
+ * skipFacet lets the rail count how many games a label *would* return,
+ * by ignoring that facet's own include list.
+ */
+function matches(game){
+  return matchesQuery(game) && evaluateChain(game, chain);
+}
+
+const filteredGames = () => db.games.filter(g => matches(g));
+
+/** Variations that actually say something. Blank lines are not shown or counted. */
+const realVariations = game => (game.variations || []).filter(v => v && v.trim());
+
+/** Human-readable label for a stored value id. */
+/* ---------------------------------------------------------------------------
+   View switching
+   --------------------------------------------------------------------------- */
+/* A back stack. Every move forward remembers where you were, so Back and
+   Cancel return to the page you actually came from rather than always the
+   catalog. Editor entries are never pushed, since returning into a stale
+   draft is not what anyone means by "back". */
+let here = { view: "Catalog" };
+const trail = [];
+
+/** What to call an entry on a back button. */
+function entryName(entry){
+  if(!entry) return "Catalog";
+  if(entry.view === "Labels") return "Labels";
+  if(entry.view === "Detail"){
+    const game = db.games.find(g => g.id === entry.id);
+    if(game) return game.title;
+  }
+  return "Catalog";
+}
+
+/** Move to a page. Pass replace when the current page should not be returned to. */
+function go(entry, replace){
+  const sameAsHere = here.view === entry.view && here.id === entry.id;
+  if(!replace && !sameAsHere && here.view !== "Edit") trail.push(here);
+  if(trail.length > 30) trail.shift();
+  here = entry;
+  // Do not offer a back step to the page we just landed on.
+  const top = trail[trail.length - 1];
+  if(top && top.view === here.view && top.id === here.id) trail.pop();
+  applyView();
+}
+
+/** Step back to the previous page, skipping anything that no longer exists. */
+function back(){
+  let entry = trail.pop();
+  while(entry && entry.view === "Detail" && !db.games.some(g => g.id === entry.id)) entry = trail.pop();
+  here = entry || { view: "Catalog" };
+  applyView();
+}
+
+/** Clear the stack and start again at the catalog. */
+function toCatalog(){
+  trail.length = 0;
+  go({ view: "Catalog" }, true);
+}
+
+/** Render whatever page `here` names, then show it. */
+function applyView(){
+  if(here.view === "Catalog") renderCatalog();
+  else if(here.view === "Detail") renderDetail(here.id);
+  else if(here.view === "Edit") renderEditPage(here.id);
+  else if(here.view === "Labels") renderLabelManager();
+
+  showView(here.view);
+
+  // Back buttons name their destination, so there is no guessing.
+  const target = entryName(trail[trail.length - 1]);
+  $("#btnBack").textContent = "\u2190 " + target;
+  $("#btnCloseLabels").textContent = "\u2190 " + target;
+}
+
+function showView(name){
+  $$(".view").forEach(v => v.classList.remove("active"));
+  $("#view" + name).classList.add("active");
+  // Search belongs to the catalog; leaving it collapses the field but keeps
+  // any active query, which the result line still reports.
+  $("#searchToggle").style.display = (name === "Catalog") ? "" : "none";
+
+  // Labels is the only header button that goes somewhere, so it is the only
+  // one that can be "current". The rest are actions.
+  if(name === "Labels") $("#btnLabels").setAttribute("aria-current", "page");
+  else $("#btnLabels").removeAttribute("aria-current");
+  if(name !== "Catalog") closeSearch(false);
+  window.scrollTo(0, 0);
+}
+
+/* ---------------------------------------------------------------------------
+   Catalog: filter rail and result grid
+   --------------------------------------------------------------------------- */
+function renderCatalog(){
+  renderChain();
+  renderLabelList();
+  renderResults();
+}
+
+/** The chain itself: labels with a tappable connector between each pair. */
+function renderChain(){
+  const host = $("#chain");
+
+  if(!chain.length){
+    host.innerHTML = `<span class="chain-empty">No labels picked. Tap one below to start a filter.</span>`;
+    return;
+  }
+
+  host.innerHTML = chain.map((link, i) =>
+    (i ? `<button class="op" data-flip="${i}" title="Switch between and / or">${link.op}</button>` : "") +
+    `<button class="chip inc" data-drop="${i}">${esc(labelName(link.id))} <span class="c">\u00d7</span></button>`
+  ).join("");
+
+  $$("[data-flip]", host).forEach(b => b.onclick = () => flipConnector(Number(b.dataset.flip)));
+  $$("[data-drop]", host).forEach(b => b.onclick = () => removeFromChain(Number(b.dataset.drop)));
+}
+
+/**
+ * Every label, with the count of games you would get by adding it to the chain
+ * with "and". A zero is a dead end you can see before you tap it. Labels
+ * already in the chain sit at the top so they never scroll out of reach.
+ */
+function renderLabelList(){
+  const host = $("#labelList");
+  const needle = labelQuery.trim().toLowerCase();
+
+  const visible = db.labels.filter(l => !needle || l.name.toLowerCase().indexOf(needle) >= 0);
+  const ordered = visible.slice().sort((a, b) => (inChain(b.id) ? 1 : 0) - (inChain(a.id) ? 1 : 0));
+
+  if(!ordered.length){
+    host.innerHTML = `<span class="chain-empty">No label matches that.</span>`;
+    return;
+  }
+
+  host.innerHTML = ordered.map(label => {
+    if(inChain(label.id)){
+      return `<button class="chip inc" data-remove="${esc(label.id)}">${esc(label.name)} <span class="c">\u00d7</span></button>`;
+    }
+    const withLabel = chain.concat([{ id: label.id, op: chain.length ? "and" : null }]);
+    const n = db.games.filter(g => matchesQuery(g) && evaluateChain(g, withLabel)).length;
+    return `<button class="chip ${n === 0 ? "zero" : ""}" data-add="${esc(label.id)}">${esc(label.name)} <span class="c">${n}</span></button>`;
+  }).join("");
+
+  $$("[data-add]", host).forEach(b => b.onclick = () => addToChain(b.dataset.add));
+  $$("[data-remove]", host).forEach(b => b.onclick = () => {
+    const i = chain.findIndex(l => l.id === b.dataset.remove);
+    if(i >= 0) removeFromChain(i);
+  });
+}
+
+function renderResults(){
+  const list = filteredGames();
+  $("#count").textContent = list.length + " of " + db.games.length + " games";
+
+  // What is filtering the list, in the words of the filter itself.
+  const bits = [];
+  if(chainText()) bits.push(chainText());
+  if(query) bits.push("search: " + query);
+  $("#activeFilters").textContent = bits.length ? "\u00b7 " + bits.join(" \u00b7 ") : "";
+
+  $("#grid").innerHTML = list.map(cardHTML).join("");
+  $$("#grid [data-open]").forEach(btn => btn.onclick = () => openDetail(btn.dataset.open));
+
+  // Tapping a label on a card starts or extends the filter, tapping it again
+  // takes it back out.
+  $$("#grid [data-label]").forEach(btn => btn.onclick = () => {
+    const id = btn.dataset.label;
+    const at = chain.findIndex(l => l.id === id);
+    if(at >= 0) removeFromChain(at);
+    else addToChain(id);
+  });
+
+  const empty = $("#empty");
+  empty.hidden = list.length > 0;
+  if(!db.games.length){
+    empty.hidden = false;
+    empty.querySelector("h3").textContent = "No games yet";
+    empty.querySelector("p").textContent  = "Add your first game. A name and one line are enough to start.";
+  } else {
+    empty.querySelector("h3").textContent = "Nothing matches those labels";
+    empty.querySelector("p").textContent  = "Loosen a filter, or add a game that fills the gap.";
+  }
+
+  renderPrint(list);
+}
+
+function cardHTML(game){
+  const ids = gameLabels(game);
+
+  // A card is no longer one big button, because the labels inside it are
+  // buttons of their own and a button cannot contain another one.
+  return `<article class="card" data-id="${esc(game.id)}">
+    <button class="card-open" data-open="${esc(game.id)}">
+      <h3>${esc(game.title)}</h3>
+      <p>${esc(game.summary)}</p>
+    </button>
+    <div class="meta">
+      ${ids.map(id => `<button class="tag tag-btn ${inChain(id) ? "on" : ""}" data-label="${esc(id)}"
+        title="Filter by ${esc(labelName(id))}">${esc(labelName(id))}</button>`).join("")}
+    </div>
+  </article>`;
+}
+
+/* ---------------------------------------------------------------------------
+   Detail page
+   --------------------------------------------------------------------------- */
+/** Draw one game's page. Navigation is the caller's job. */
+function renderDetail(id){
+  const game = db.games.find(g => g.id === id);
+  if(!game) return;
+  currentId = id;
+  $("#detailBody").innerHTML = detailHTML(game);
+}
+
+function openDetail(id, replace){
+  if(!db.games.some(g => g.id === id)) return;
+  go({ view: "Detail", id: id }, replace);
+}
+
+function detailHTML(game){
+  const row = (label, value) => value ? `<dt>${label}</dt><dd>${esc(value)}</dd>` : "";
+
+  // Left column: core, then story.
+  const core = row("Setup", game.setup)
+             + row("Goal", game.goal)
+             + row("Win", game.winCondition)
+             + row("Reset", game.resetRule);
+
+  let left = core ? `<div class="block"><h4>Core</h4><dl class="kv">${core}</dl></div>` : "";
+  if(game.story){
+    left += `<div class="block"><h4>Story</h4><p class="prose">${esc(game.story)}</p></div>`;
+  }
+
+  // Right column: progression.
+  let right = "";
+  const variations = realVariations(game);
+  if(variations.length){
+    right = `<div class="block"><h4>Variations</h4><ul class="varlist">`
+      + variations.map(text => `<li>${esc(text)}</li>`).join("")
+      + `</ul></div>`;
+  }
+
+  // Footer: labels grouped by facet, spread across the available width.
+  const tags = gameLabels(game).map(id => `<span class="tag">${esc(labelName(id))}</span>`).join("");
+  const labelFooter = `<div class="labelfoot"><h4>Labels</h4>`
+    + (tags ? `<div class="lvals">${tags}</div>`
+            : `<p class="chain-empty">No labels on this game yet.</p>`)
+    + `</div>`;
+
+  // With only one side filled, the page goes single column instead of
+  // leaving an empty half.
+  const columns = [left, right].filter(Boolean);
+  const layout = `<div class="dcols${columns.length < 2 ? " single" : ""}">`
+    + columns.map(col => `<div>${col}</div>`).join("") + `</div>`;
+
+  return `<div class="dhead"><h2>${esc(game.title)}</h2></div>
+    ${layout}
+    ${labelFooter}`;
+}
+
+/* ---------------------------------------------------------------------------
+   Editor
+   --------------------------------------------------------------------------- */
+function blankGame(){
+  return {
+    id: uid("g"), title: "", summary: "",
+    setup: "", goal: "", winCondition: "", resetRule: "",
+    variations: [],
+    story: "", labels: [],
+    createdAt: now(), updatedAt: now()
+  };
+}
+
+/** Load a game into the editor. Navigation is the caller's job. */
+function renderEditPage(id){
+  draft = id ? JSON.parse(JSON.stringify(db.games.find(g => g.id === id))) : blankGame();
+  editingExisting = !!id;
+  $("#editTitle").textContent = id ? "Edit game" : "New game";
+  renderEditor();
+  setTimeout(() => { const first = $("#f-title"); if(first) first.focus(); }, 30);
+}
+
+function openEdit(id){
+  go({ view: "Edit", id: id || null });
+}
+
+function renderEditor(){
+  const g = draft;
+  const textarea = (id, label, value, hint, rows) =>
+    `<div class="field"><label for="${id}">${label}</label>
+     <textarea id="${id}" rows="${rows || 2}">${esc(value)}</textarea>
+     ${hint ? `<div class="hint">${hint}</div>` : ""}</div>`;
+  const input = (id, label, value, hint) =>
+    `<div class="field"><label for="${id}">${label}</label>
+     <input type="text" id="${id}" value="${esc(value)}">
+     ${hint ? `<div class="hint">${hint}</div>` : ""}</div>`;
+
+  $("#editBody").innerHTML =
+      input("f-title", "Name", g.title, "One name only. If the kids' name is the good one, use that.")
+    + textarea("f-summary", "One line", g.summary, "Shown on the catalog card, not on the game page.")
+
+    + `<div class="block"><h4>Core</h4>`
+    + textarea("f-setup", "Setup", g.setup, "Starting position, who is where.")
+    + textarea("f-goal", "Goal", g.goal, "One line, or name both sides when they want different things.", 3)
+    + textarea("f-win", "Win condition", g.winCondition)
+    + textarea("f-reset", "Reset rule", g.resetRule, "What happens after a score.")
+    + `</div>`
+
+    + `<div class="block"><h4>Variations</h4>
+       <div id="variationRows"></div>
+       <button type="button" class="btn btn-sm" id="addVariation">Add variation</button>
+       <div class="hint">One line each. Anything you might change on the day, a tighter win condition, a different connection, a smaller space.</div></div>`
+
+    + `<div class="block"><h4>Labels</h4><div id="labelPickers"></div></div>`
+
+    + `<div class="block"><h4>Story</h4>`
+    + textarea("f-story", "Framing and cues", g.story, "The picture you give them and the words you use on the mat.", 3)
+    + `</div>`;
+
+  bindField("f-title", "title");
+  bindField("f-summary", "summary");
+  bindField("f-setup", "setup");
+  bindField("f-goal", "goal");
+  bindField("f-win", "winCondition");
+  bindField("f-reset", "resetRule");
+  bindField("f-story", "story");
+
+  renderVariationRows();
+  renderLabelPickers();
+  $("#addVariation").onclick = () => {
+    draft.variations.push("");
+    renderVariationRows();
+    const rows = $$("[data-variation]");
+    if(rows.length) rows[rows.length - 1].focus();
+  };
+}
+
+/** Keep one plain input or textarea in sync with a top-level draft field. */
+function bindField(elementId, key){
+  const el = $("#" + elementId);
+  if(el) el.oninput = e => { draft[key] = e.target.value; };
+}
+
+function renderVariationRows(){
+  const host = $("#variationRows");
+
+  const grip = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/>
+    <circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/>
+    <circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>`;
+
+  host.innerHTML = draft.variations.map((text, i) => `
+    <div class="repeat-row var-row">
+      <button type="button" class="grip" data-grip="${i}"
+              aria-label="Reorder variation ${i + 1}, use the arrow keys or drag">${grip}</button>
+      <textarea data-variation="${i}" rows="2" placeholder="What changes">${esc(text)}</textarea>
+      <button type="button" class="x" data-variation-remove="${i}" aria-label="Remove variation">\u00d7</button>
+    </div>`).join("");
+
+  $$("[data-variation]", host).forEach(field =>
+    field.oninput = e => { draft.variations[Number(e.target.dataset.variation)] = e.target.value; });
+
+  $$("[data-variation-remove]", host).forEach(btn =>
+    btn.onclick = () => { draft.variations.splice(Number(btn.dataset.variationRemove), 1); renderVariationRows(); });
+
+  wireVariationDragging(host);
+}
+
+/* Reordering variations.
+
+   Rows are moved in the DOM as you drag rather than being re-rendered, so the
+   text you are editing is never rebuilt underneath you. The array is read back
+   from the DOM once the drag ends. A row is only draggable while the grip is
+   held, otherwise you could not select text in the box next to it. Touch gets
+   its own handlers because HTML5 dragging does not fire on a touchscreen, and
+   the arrow keys do the same job from the keyboard. */
+function wireVariationDragging(host){
+  const rows = () => $$(".var-row", host);
+
+  /** The row whose middle is nearest below the pointer, ignoring the one held. */
+  const rowUnder = (y, held) => rows().find(row => {
+    if(row === held) return false;
+    const box = row.getBoundingClientRect();
+    return y < box.top + box.height / 2;
+  });
+
+  const place = (held, y) => {
+    const target = rowUnder(y, held);
+    if(target) host.insertBefore(held, target);
+    else host.appendChild(held);
+  };
+
+  /** Read the order back out of the DOM, which also picks up any edits. */
+  const commit = () => {
+    draft.variations = $$(".var-row textarea", host).map(field => field.value);
+    renderVariationRows();
+  };
+
+  let held = null;
+
+  $$("[data-grip]", host).forEach(handle => {
+    const row = handle.closest(".var-row");
+
+    // Only arm dragging while the grip itself is under the pointer.
+    handle.onmousedown = () => { row.draggable = true; };
+    handle.onmouseup = () => { row.draggable = false; };
+
+    row.ondragstart = e => {
+      held = row;
+      row.classList.add("dragging");
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", "");   // Firefox needs a payload
+      }
+    };
+    row.ondragover = e => { if(held){ e.preventDefault(); place(held, e.clientY); } };
+    row.ondragend = () => {
+      row.classList.remove("dragging");
+      row.draggable = false;
+      held = null;
+      commit();
+    };
+
+    // Touch: the same movement, driven by hand.
+    handle.ontouchstart = e => {
+      held = row;
+      row.classList.add("dragging");
+      e.preventDefault();
+    };
+    handle.ontouchmove = e => {
+      if(!held) return;
+      e.preventDefault();
+      place(held, e.touches[0].clientY);
+    };
+    handle.ontouchend = () => {
+      if(!held) return;
+      held.classList.remove("dragging");
+      held = null;
+      commit();
+    };
+
+    // Keyboard: move the row one step and keep the grip focused.
+    handle.onkeydown = e => {
+      if(e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      e.preventDefault();
+      const from = Number(handle.dataset.grip);
+      const to = e.key === "ArrowUp" ? from - 1 : from + 1;
+      if(to < 0 || to >= draft.variations.length) return;
+      const moved = draft.variations.splice(from, 1)[0];
+      draft.variations.splice(to, 0, moved);
+      renderVariationRows();
+      const next = $(`[data-grip="${to}"]`, host);
+      if(next) next.focus();
+    };
+  });
+}
+
+/**
+ * One field. Type to narrow the existing labels, click a suggestion or press
+ * Enter to attach it. Enter on a name that does not exist yet creates it.
+ */
+function renderLabelPickers(){
+  const host = $("#labelPickers");
+  host.innerHTML = `
+    <div class="label-picker" id="draftLabels"></div>
+    <div class="typeahead">
+      <input type="text" id="labelInput" placeholder="Type a label, press Enter" autocomplete="off">
+      <div class="suggestions" id="labelSuggest"></div>
+    </div>`;
+
+  const input = $("#labelInput");
+  const suggest = $("#labelSuggest");
+
+  const drawAttached = () => {
+    const attached = gameLabels(draft);
+    $("#draftLabels").innerHTML = attached.length
+      ? attached.map(id => `<button type="button" class="chip inc" data-off="${esc(id)}">${esc(labelName(id))} <span class="c">\u00d7</span></button>`).join("")
+      : `<span class="chain-empty">No labels yet.</span>`;
+    $$("#draftLabels [data-off]").forEach(b => b.onclick = () => {
+      draft.labels = draft.labels.filter(id => id !== b.dataset.off);
+      drawAttached();
+      drawSuggestions();
+    });
+  };
+
+  const attach = id => {
+    if(draft.labels.indexOf(id) < 0) draft.labels.push(id);
+    input.value = "";
+    drawAttached();
+    drawSuggestions();
+    input.focus();
+  };
+
+  // Which suggestion the arrow keys are sitting on, -1 for none.
+  let active = -1;
+
+  const options = () => $$(".suggestion", suggest);
+
+  const highlight = index => {
+    const items = options();
+    if(!items.length){ active = -1; return; }
+    active = Math.max(0, Math.min(index, items.length - 1));
+    items.forEach((el, i) => {
+      const on = i === active;
+      el.classList.toggle("active", on);
+      el.setAttribute("aria-selected", String(on));
+      if(on && el.scrollIntoView) el.scrollIntoView({ block: "nearest" });
+    });
+  };
+
+  const choose = el => {
+    if(!el) return false;
+    if(el.dataset.create) attach(createLabel(input.value.trim()));
+    else attach(el.dataset.pick);
+    return true;
+  };
+
+  const drawSuggestions = () => {
+    const needle = input.value.trim().toLowerCase();
+    const matches = db.labels
+      .filter(l => draft.labels.indexOf(l.id) < 0)
+      .filter(l => !needle || l.name.toLowerCase().indexOf(needle) >= 0)
+      .slice(0, 8);
+
+    const exact = db.labels.some(l => slug(l.name) === slug(input.value.trim()));
+    let html = matches.map(l =>
+      `<button type="button" class="suggestion" role="option" aria-selected="false" data-pick="${esc(l.id)}">${esc(l.name)}</button>`).join("");
+    if(needle && !exact){
+      html += `<button type="button" class="suggestion new" role="option" aria-selected="false" data-create="1">Create &ldquo;${esc(input.value.trim())}&rdquo;</button>`;
+    }
+
+    suggest.innerHTML = html;
+    suggest.classList.toggle("open", Boolean(needle) && Boolean(html));
+    active = -1;
+
+    options().forEach(el => el.onclick = () => choose(el));
+  };
+
+  input.oninput = drawSuggestions;
+
+  input.onkeydown = e => {
+    const open = suggest.classList.contains("open");
+
+    if(e.key === "ArrowDown"){
+      e.preventDefault();
+      if(!open) drawSuggestions();
+      highlight(active + 1);
+      return;
+    }
+    if(e.key === "ArrowUp"){
+      e.preventDefault();
+      highlight(active - 1);
+      return;
+    }
+    if(e.key === "Escape" && open){
+      // Close the list without letting Escape walk back a page.
+      e.preventDefault();
+      e.stopPropagation();
+      suggest.classList.remove("open");
+      active = -1;
+      return;
+    }
+    if(e.key !== "Enter") return;
+
+    e.preventDefault();
+    const items = options();
+    if(active >= 0 && choose(items[active])) return;
+
+    const typed = input.value.trim();
+    if(!typed) return;
+    const existing = db.labels.find(l => slug(l.name) === slug(typed));
+    if(existing) attach(existing.id);
+    else if(!choose(items[0])) attach(createLabel(typed));
+  };
+
+  input.onblur = () => setTimeout(() => suggest.classList.remove("open"), 150);
+
+  drawAttached();
+}
+
+/** Create a label and keep the list sorted. Returns its id. */
+/** Create a label, optionally filed into a group. Returns its id. */
+function createLabel(name, groupId){
+  const clean = name.trim();
+  const existing = db.labels.find(l => slug(l.name) === slug(clean));
+  if(existing) return existing.id;
+
+  const id = uniqueId(slug(clean), db.labels.map(l => l.id));
+  db.labels.push({ id: id, name: clean });
+  sortLabels(db.labels);
+
+  const group = groupId ? db.groups.find(g => g.id === groupId) : null;
+  if(group) group.labels.push(id);
+
+  save();
+  return id;
+}
+
+/** Append a numeric suffix until the id is free within taken[]. */
+function uniqueId(base, taken){
+  let id = base;
+  while(taken.indexOf(id) >= 0) id = base + "-" + Math.floor(Math.random() * 90 + 10);
+  return id;
+}
+
+function saveDraft(){
+  if(!draft.title.trim()){
+    toast("Give the game a name first.");
+    const first = $("#f-title");
+    if(first) first.focus();
+    return;
+  }
+  // Drop variation rows that were added but never written.
+  draft.variations = draft.variations.map(v => v.trim()).filter(Boolean);
+  draft.updatedAt = now();
+
+  const index = db.games.findIndex(g => g.id === draft.id);
+  if(index >= 0) db.games[index] = draft;
+  else db.games.unshift(draft);
+
+  save();
+  const wasEditing = editingExisting;
+  openDetail(draft.id);
+  toast(wasEditing ? "Game updated" : "Game added");
+}
+
+/* ---------------------------------------------------------------------------
+   Label manager: rename, add and delete facets and their labels
+   --------------------------------------------------------------------------- */
+function renderLabelManager(){
+  const host = $("#labelBody");
+
+  const explainer = `<details class="explainer">
+      <summary>Groups organise this page. A game just carries labels, and the filter never looks at a group.
+        <span class="more">Read more</span><span class="less">Read less</span></summary>
+      <div class="explainer-body">
+        <p>In the filter you build a chain, for example <strong>warm up and grip fight</strong>. Each
+        connector belongs to the pair it sits between, so you can mix them, and the chain reads strictly
+        left to right. <strong>warm up and grip fight or turtle</strong> means the first two together, or
+        turtle on its own.</p>
+        <p>Groups exist so this page stays readable. Renaming a label updates it on every game that uses
+        it. Deleting one removes it everywhere, and deleting a group removes its labels too.</p>
+      </div>
+    </details>`;
+
+  const chip = id => {
+    const name = labelName(id);
+    return `<span class="chip-edit">
+      <input type="text" data-label-name="${esc(id)}" value="${esc(name)}" aria-label="Label name">
+      <button data-label-delete="${esc(id)}" aria-label="Delete ${esc(name)}">\u00d7</button>
+    </span>`;
+  };
+
+  const groupBlock = (group, editable) => `
+    <section class="lab-group">
+      <div class="lab-group-head">
+        <input type="text" ${editable ? `data-group-name="${esc(group.id)}"` : "disabled"}
+               value="${esc(group.name)}" aria-label="Group name">
+        <span class="count">${group.labels.length} label${group.labels.length === 1 ? "" : "s"}</span>
+        ${editable ? `<button class="btn btn-sm btn-danger" data-group-delete="${esc(group.id)}">Delete group</button>` : ""}
+      </div>
+      <div class="lab-chips">${group.labels.map(chip).join("")
+        || `<span class="chain-empty">No labels in this group yet.</span>`}</div>
+      ${editable ? `<div class="lab-add">
+        <input type="text" data-label-add="${esc(group.id)}" placeholder="Add label, press Enter">
+      </div>` : ""}
+    </section>`;
+
+  const loose = ungroupedLabels();
+  const blocks = db.groups.map(g => groupBlock(g, true)).join("")
+    + (loose.length ? groupBlock({ id: "__loose", name: "Ungrouped", labels: loose.map(l => l.id) }, false) : "");
+
+  host.innerHTML = explainer + blocks
+    + `<div class="lab-new-group">
+        <input type="text" id="newGroup" placeholder="Add a new group, press Enter"></div>`;
+
+
+  $$("[data-group-name]", host).forEach(field => field.onchange = () => {
+    const group = db.groups.find(g => g.id === field.dataset.groupName);
+    if(!group) return;
+    group.name = field.value.trim() || group.name;
+    save();
+  });
+
+  $$("[data-group-delete]", host).forEach(btn => btn.onclick = async () => {
+    const group = db.groups.find(g => g.id === btn.dataset.groupDelete);
+    if(!group) return;
+    const confirmed = await ask("Delete group",
+      `"${group.name}" and its ${group.labels.length} label${group.labels.length === 1 ? "" : "s"} will be removed from every game.`,
+      [{ label: "Delete group", value: true, kind: "danger" }, { label: "Cancel", value: false }]);
+    if(!confirmed) return;
+    group.labels.slice().forEach(dropLabel);
+    db.groups = db.groups.filter(g => g.id !== group.id);
+    save();
+    renderLabelManager();
+  });
+
+  $$("[data-label-name]", host).forEach(field => field.onchange = () => {
+    const label = db.labels.find(l => l.id === field.dataset.labelName);
+    if(!label) return;
+    label.name = field.value.trim() || label.name;
+    sortLabels(db.labels);
+    save();
+  });
+
+  $$("[data-label-delete]", host).forEach(btn => btn.onclick = async () => {
+    const id = btn.dataset.labelDelete;
+    const used = labelUsage(id);
+    if(used){
+      const confirmed = await ask("Delete label",
+        `"${labelName(id)}" is on ${used} game${used === 1 ? "" : "s"} and will be removed from ${used === 1 ? "it" : "them"}.`,
+        [{ label: "Delete", value: true, kind: "danger" }, { label: "Cancel", value: false }]);
+      if(!confirmed) return;
+    }
+    dropLabel(id);
+    save();
+    renderLabelManager();
+  });
+
+  $$("[data-label-add]", host).forEach(field => field.onkeydown = e => {
+    if(e.key !== "Enter") return;
+    e.preventDefault();
+    const name = field.value.trim();
+    if(!name) return;
+    createLabel(name, field.dataset.labelAdd);
+    renderLabelManager();
+  });
+
+  const newGroup = $("#newGroup", host);
+  if(newGroup) newGroup.onkeydown = e => {
+    if(e.key !== "Enter") return;
+    e.preventDefault();
+    const name = newGroup.value.trim();
+    if(!name) return;
+    db.groups.push({ id: uniqueId(slug(name), db.groups.map(g => g.id)), name: name, labels: [] });
+    save();
+    renderLabelManager();
+  };
+}
+
+/** Remove a label from the list, from every game, and from the filter chain. */
+function dropLabel(id){
+  db.labels = db.labels.filter(l => l.id !== id);
+  db.groups.forEach(group => { group.labels = group.labels.filter(x => x !== id); });
+  db.games.forEach(game => {
+    if(game.labels) game.labels = game.labels.filter(x => x !== id);
+  });
+  const at = chain.findIndex(l => l.id === id);
+  if(at >= 0) removeFromChain(at);
+}
+
+/* ---------------------------------------------------------------------------
+   Print view: the currently filtered games as cut-out cards.
+   There is no button for this — the browser's own print command picks it up.
+   --------------------------------------------------------------------------- */
+function renderPrint(list){
+  $("#printarea").innerHTML = `<div class="pcards">` + list.map(game => {
+    const variations = realVariations(game);
+    return `<div class="pcard">
+      <h3>${esc(game.title)}</h3>
+      <p class="pline">${esc(game.summary)}</p>
+      <dl>
+        ${game.setup ? `<dt>Setup</dt><dd>${esc(game.setup)}</dd>` : ""}
+        ${game.goal ? `<dt>Goal</dt><dd>${esc(game.goal)}</dd>` : ""}
+        ${game.winCondition ? `<dt>Win</dt><dd>${esc(game.winCondition)}</dd>` : ""}
+        ${variations.length
+          ? `<dt>Variations</dt><dd>${variations.map(esc).join(" \u00b7 ")}</dd>` : ""}
+      </dl>
+    </div>`;
+  }).join("") + `</div>`;
+}
+
+/* ---------------------------------------------------------------------------
+   Export and import
+   --------------------------------------------------------------------------- */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = PUBLISHED;   // drop it straight into the repo
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+  toast("Exported " + db.games.length + " games as " + PUBLISHED);
+}
+
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = async () => {
+    let incoming;
+    try{
+      incoming = normalize(JSON.parse(reader.result));
+    }catch(err){
+      toast("That file is not a valid catalog export.");
+      return;
+    }
+
+    const choice = await ask(
+      "Import catalog",
+      "This file holds " + incoming.games.length + " games. Merging keeps what you have and takes the newer version of anything that clashes.",
+      [{ label: "Merge", value: "merge", kind: "primary" },
+       { label: "Replace all", value: "replace", kind: "danger" },
+       { label: "Cancel", value: "cancel" }]);
+
+    if(choice === "cancel") return;
+
+    if(choice === "merge"){
+      // Labels: union by name, so two catalogs do not end up with duplicates.
+      incoming.labels.forEach(label => {
+        if(!db.labels.some(l => slug(l.name) === slug(label.name))) db.labels.push(label);
+      });
+      sortLabels(db.labels);
+
+      // Groups: union by name, and a group takes any labels it does not have.
+      incoming.groups.forEach(incomingGroup => {
+        const existing = db.groups.find(g => slug(g.name) === slug(incomingGroup.name));
+        if(!existing){ db.groups.push(incomingGroup); return; }
+        incomingGroup.labels.forEach(id => {
+          if(existing.labels.indexOf(id) < 0 && !groupOf(id)) existing.labels.push(id);
+        });
+      });
+      // Games: match on id, newer updatedAt wins.
+      let added = 0, updated = 0;
+      incoming.games.forEach(game => {
+        const index = db.games.findIndex(g => g.id === game.id);
+        if(index < 0){ db.games.push(game); added++; }
+        else if(new Date(game.updatedAt) > new Date(db.games[index].updatedAt)){ db.games[index] = game; updated++; }
+      });
+      toast("Merged: " + added + " added, " + updated + " updated");
+    } else {
+      const confirmed = await ask(
+        "Replace everything?",
+        "Your current games are gone unless you exported them first.",
+        [{ label: "Replace", value: true, kind: "danger" }, { label: "Cancel", value: false }]);
+      if(!confirmed) return;
+      db = incoming;
+      toast("Catalog replaced");
+    }
+
+    save();
+    updateBuildNote();
+    toCatalog();
+  };
+  reader.readAsText(file);
+}
+
+/* ---------------------------------------------------------------------------
+   Wiring
+   --------------------------------------------------------------------------- */
+$("#q").oninput = e => { query = e.target.value; renderCatalog(); };
+$("#labelSearch").oninput = e => { labelQuery = e.target.value; renderLabelList(); };
+$("#home").onclick = toCatalog;
+$("#btnNew").onclick = () => openEdit(null);
+$("#emptyNew").onclick = () => openEdit(null);
+$("#btnBack").onclick = back;
+$("#btnEdit").onclick = () => { if(currentId) openEdit(currentId); };
+
+/** Leaving the editor always returns to whatever came before it. */
+function cancelEdit(){ back(); }
+$("#btnCancelEdit").onclick = cancelEdit;
+$("#btnCancelEditFoot").onclick = cancelEdit;
+$("#btnSave").onclick = saveDraft;
+
+$("#btnDup").onclick = () => {
+  const game = db.games.find(g => g.id === currentId);
+  if(!game) return;
+  const copy = JSON.parse(JSON.stringify(game));
+  copy.id = uid("g");
+  copy.title = game.title + " (copy)";
+  copy.createdAt = now();
+  copy.updatedAt = now();
+  db.games.unshift(copy);
+  save();
+  openEdit(copy.id);
+};
+
+$("#btnDelete").onclick = async () => {
+  const game = db.games.find(g => g.id === currentId);
+  if(!game) return;
+  const confirmed = await ask(
+    "Delete game",
+    `"${game.title}" will be removed from the catalog. This cannot be undone.`,
+    [{ label: "Delete", value: true, kind: "danger" }, { label: "Cancel", value: false }]);
+  if(!confirmed) return;
+  const deletedId = currentId;
+  db.games = db.games.filter(g => g.id !== deletedId);
+  currentId = null;
+  save();
+  // Forget the deleted game everywhere in the stack, then step back.
+  for(let i = trail.length - 1; i >= 0; i--){
+    if(trail[i].view === "Detail" && trail[i].id === deletedId) trail.splice(i, 1);
+  }
+  back();
+  toast("Game deleted");
+};
+
+$("#btnLabels").onclick = () => go({ view: "Labels" });
+$("#btnCloseLabels").onclick = back;
+$("#btnExport").onclick = exportJSON;
+$("#btnImport").onclick = () => $("#fileInput").click();
+
+/* Once your changes are committed as games.json they live in the base, so the
+   local layer is just a stale copy of them. This throws it away. */
+$("#btnClearLocal").onclick = async () => {
+  const pending = localChangeCount();
+  if(!pending){ toast("Nothing local to clear"); return; }
+  const confirmed = await ask("Discard local changes",
+    `${pending} unpublished change${pending === 1 ? "" : "s"} will be thrown away, leaving the published catalog. This is only for abandoning work, publishing already clears itself.`,
+    [{ label: "Clear", value: true, kind: "danger" }, { label: "Cancel", value: false }]);
+  if(!confirmed) return;
+  localStorage.removeItem(KEY);
+  db = mergeLocal(base, loadLocal());
+  updateBuildNote();
+  toCatalog();
+  toast("Back to the published catalog");
+};
+$("#fileInput").onchange = e => {
+  const file = e.target.files[0];
+  if(file) importJSON(file);
+  e.target.value = "";
+};
+
+$("#btnClear").onclick = () => {
+  chain = [];
+  query = "";
+  labelQuery = "";
+  $("#q").value = "";
+  $("#labelSearch").value = "";
+  renderCatalog();
+  closeSearch(false);
+  toast("Filters cleared");
+};
+
+$("#railToggle").onclick = () => {
+  const rail = $("#rail");
+  const opening = rail.dataset.collapsed === "true";
+  rail.dataset.collapsed = String(!opening);
+  const toggle = $("#railToggle");
+  toggle.setAttribute("aria-expanded", String(opening));
+  toggle.textContent = opening ? "Hide filters" : "Filters";
+};
+
+/* Search: collapsed to an icon, expands across the action buttons. */
+function openSearch(){
+  closeMenu();
+  if(here.view !== "Catalog") toCatalog();
+  $("#actions").classList.add("searching");
+  $("#searchToggle").setAttribute("aria-expanded", "true");
+  $("#q").focus();
+}
+
+/** Collapse the field. Pass false to keep an active query running. */
+function closeSearch(clearQuery){
+  $("#actions").classList.remove("searching");
+  $("#searchToggle").setAttribute("aria-expanded", "false");
+  if(clearQuery !== false && query){
+    query = "";
+    $("#q").value = "";
+    renderCatalog();
+  }
+}
+
+$("#modal").onclick = e => { if(e.target.id === "modal" && pendingAsk) pendingAsk(); };
+
+/** The menu footer: which build, which source, and whether anything is unpublished. */
+function updateBuildNote(){
+  const source = publishedFound ? PUBLISHED : "built-in games";
+  const pending = (base && db) ? localChangeCount() : 0;
+  $("#buildNote").innerHTML =
+    `Build ${esc(BUILD)}<br>Data: ${esc(source)}<br>` +
+    (pending ? `<span class="pending">${pending} unpublished change${pending === 1 ? "" : "s"}</span>`
+             : "In sync with published data");
+}
+
+/* Overflow menu. Opens on tap, closes on a second tap, on a choice, on
+   Escape, or when a tap lands anywhere else. */
+function closeMenu(){
+  $("#menu").classList.remove("open");
+  $("#btnMore").setAttribute("aria-expanded", "false");
+}
+$("#btnMore").onclick = e => {
+  e.stopPropagation();
+  const menu = $("#menu");
+  const opening = !menu.classList.contains("open");
+  menu.classList.toggle("open", opening);
+  $("#btnMore").setAttribute("aria-expanded", String(opening));
+};
+$("#menu").addEventListener("click", e => { if(e.target.closest(".menu-items .btn")) closeMenu(); });
+document.addEventListener("click", e => { if(!e.target.closest("#menu")) closeMenu(); });
+
+$("#searchToggle").onclick = openSearch;
+$("#searchClose").onclick = () => closeSearch(true);
+
+// Escape backs out one step: the search field first, then the page.
+// "/" jumps straight into search.
+document.addEventListener("keydown", e => {
+  const typing = ["INPUT", "TEXTAREA", "SELECT"].indexOf(document.activeElement.tagName) >= 0;
+
+  if(e.key === "Escape"){
+    // Peel one layer at a time, from the most temporary thing outwards:
+    // dialog, menu, search field, then the filter itself, then the page.
+    if(pendingAsk){ pendingAsk(); return; }
+    if($("#menu").classList.contains("open")){ closeMenu(); return; }
+    if($("#actions").classList.contains("searching")){ closeSearch(true); return; }
+
+    if(here.view === "Catalog"){
+      if(chain.length){
+        chain = [];
+        labelQuery = "";
+        $("#labelSearch").value = "";
+        renderCatalog();
+        toast("Filters cleared");
+      } else if(query){
+        query = "";
+        $("#q").value = "";
+        renderCatalog();
+        toast("Search cleared");
+      }
+      return;
+    }
+
+    if(here.view !== "Edit") back();
+    return;
+  }
+
+  if(e.key === "/" && !typing){
+    e.preventDefault();
+    openSearch();
+  }
+});
+
+/* Startup: fetch the published catalog, lay this browser's changes on top,
+   then draw. */
+async function start(){
+  base = await loadBase();
+  db = mergeLocal(base, loadLocal());
+
+  // Re-derive the local layer against the base we just fetched. Anything that
+  // has since been published matches the base, so it drops out by itself and
+  // there is nothing to clear by hand.
+  if(localStorage.getItem(KEY)) save();
+
+  updateBuildNote();
+  applyView();
+}
+
+start();
+</script>
+</body>
+</html>
