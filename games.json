@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 10,
+  "labels": [
+    {
+      "id": "adult",
+      "name": "Adult"
+    },
+    {
+      "id": "anaconda-choke",
+      "name": "Anaconda Choke"
+    },
+    {
+      "id": "arm-bar",
+      "name": "Arm Bar"
+    },
+    {
+      "id": "arm-drag",
+      "name": "Arm Drag"
+    },
+    {
+      "id": "back-control",
+      "name": "Back Control"
+    },
+    {
+      "id": "chest-to-chest",
+      "name": "Chest To Chest"
+    },
+    {
+      "id": "closed-guard",
+      "name": "Closed Guard"
+    },
+    {
+      "id": "cloth",
+      "name": "Cloth"
+    },
+    {
+      "id": "collar-tie",
+      "name": "Collar Tie"
+    },
+    {
+      "id": "darce-choke",
+      "name": "Darce Choke"
+    },
+    {
+      "id": "dodge-ball",
+      "name": "Dodge Ball"
+    },
+    {
+      "id": "dog-fight",
+      "name": "Dog Fight"
+    },
+    {
+      "id": "double-leg",
+      "name": "Double Leg"
+    },
+    {
+      "id": "foot-sweep",
+      "name": "Foot Sweep"
+    },
+    {
+      "id": "front-headlock",
+      "name": "Front Headlock"
+    },
+    {
+      "id": "full-guard",
+      "name": "Full Guard"
+    },
+    {
+      "id": "full-mount",
+      "name": "Full Mount"
+    },
+    {
+      "id": "grip-fight",
+      "name": "Grip Fight"
+    },
+    {
+      "id": "guard",
+      "name": "Guard"
+    },
+    {
+      "id": "guillotine-choke",
+      "name": "Guillotine Choke"
+    },
+    {
+      "id": "half-guard",
+      "name": "Half Guard"
+    },
+    {
+      "id": "knee-on-belly",
+      "name": "Knee On Belly"
+    },
+    {
+      "id": "laundry-clips",
+      "name": "Laundry Clips"
+    },
+    {
+      "id": "marker-cones",
+      "name": "Marker Cones"
+    },
+    {
+      "id": "marker-plates",
+      "name": "Marker Plates"
+    },
+    {
+      "id": "maxi",
+      "name": "Maxi"
+    },
+    {
+      "id": "midi",
+      "name": "Midi"
+    },
+    {
+      "id": "mini",
+      "name": "Mini"
+    },
+    {
+      "id": "north-south",
+      "name": "North South"
+    },
+    {
+      "id": "pool-noodle",
+      "name": "Pool Noodle"
+    },
+    {
+      "id": "rear-naked-choke",
+      "name": "Rear Naked Choke"
+    },
+    {
+      "id": "rope",
+      "name": "Rope"
+    },
+    {
+      "id": "scramble",
+      "name": "Scramble"
+    },
+    {
+      "id": "single-leg",
+      "name": "Single Leg"
+    },
+    {
+      "id": "tennis-ball",
+      "name": "Tennis Ball"
+    },
+    {
+      "id": "turtle",
+      "name": "Turtle"
+    },
+    {
+      "id": "warm-up",
+      "name": "Warm Up"
+    },
+    {
+      "id": "wrestling",
+      "name": "Wrestling"
+    }
+  ],
+  "groups": [
+    {
+      "id": "audience",
+      "name": "Audience",
+      "labels": [
+        "mini",
+        "midi",
+        "maxi",
+        "adult"
+      ]
+    },
+    {
+      "id": "focus",
+      "name": "Focus",
+      "labels": [
+        "arm-drag",
+        "back-control",
+        "chest-to-chest",
+        "closed-guard",
+        "collar-tie",
+        "dog-fight",
+        "double-leg",
+        "foot-sweep",
+        "front-headlock",
+        "full-guard",
+        "full-mount",
+        "grip-fight",
+        "guard",
+        "half-guard",
+        "knee-on-belly",
+        "north-south",
+        "scramble",
+        "single-leg",
+        "turtle",
+        "warm-up",
+        "wrestling"
+      ]
+    },
+    {
+      "id": "submission",
+      "name": "Submission",
+      "labels": [
+        "anaconda-choke",
+        "arm-bar",
+        "darce-choke",
+        "guillotine-choke",
+        "rear-naked-choke"
+      ]
+    },
+    {
+      "id": "equipment",
+      "name": "Equipment",
+      "labels": [
+        "cloth",
+        "dodge-ball",
+        "laundry-clips",
+        "marker-cones",
+        "marker-plates",
+        "pool-noodle",
+        "rope",
+        "tennis-ball"
+      ]
+    }
+  ],
+  "games": [
+    {
+      "id": "treasure-chest",
+      "title": "Treasure Chest",
+      "summary": "One player hides a ball under their turtle, the other has to take the ball away.",
+      "setup": "One player starts in turtle position with a dodge ball tucked underneath them. The other player starts next to them.",
+      "goal": "The top player has to take the ball away. The bottom player has to keep the ball hidden and hold on to it.",
+      "winCondition": "Taking the ball away scores for the top player. Holding on to the ball for 60 seconds scores for the bottom player.",
+      "resetRule": "Swap roles once the ball is taken or the time is up.",
+      "variations": [
+        "Once taken away, the ball has to be carried over to the end of the mat, all the while the bottom player can still try to get the ball back into hiding.",
+        "The bottom player cannot use their hands, but only their ellbows, chest and knees.",
+        "The top player starts on the back with one or two hooks in.",
+        "For kids, there might be two top players against one bottom player.",
+        "The bottom player has to start laying on the side and is allowed to recover into turtle."
+      ],
+      "story": "The dragon is sitting on its treasure and will not give it up. Or, you are the treasure chest and have to keep the treasure safe.",
+      "labels": [
+        "mini",
+        "midi",
+        "maxi",
+        "turtle",
+        "back-control",
+        "dodge-ball",
+        "wrestling"
+      ],
+      "createdAt": "2026-08-31T12:54:05.690Z",
+      "updatedAt": "2026-08-31T13:04:35.633Z"
+    },
+    {
+      "id": "cops-and-robbers",
+      "title": "Cops And Robbers",
+      "summary": "The robbers trie to touch one another, while the cops try to keep them separated.",
+      "setup": "The robbers face each other, on hands and knees, on either side of a mats. The cops are in front of the robbers, one cop facing one robber.",
+      "goal": "The robbers have to touch each other. The cops have to keep the robbers separated.",
+      "winCondition": "As soon as two robbers establish body contact with one another, the game is over and the robbers won.",
+      "resetRule": "After the robbers established body contact, the game starts from scratch.",
+      "variations": [
+        "If there are not enough players to form pairs of robbers, the robbers' goal could be to touch the wall at the other end of the mats.",
+        "The cops start with a body lock grip around the waste.",
+        "The cops start with a seat belt grip around the shoulders.",
+        "The cops start in back control."
+      ],
+      "story": "The cops have to catch the robbers and prevent them from teaming up.",
+      "labels": [
+        "back-control",
+        "wrestling",
+        "midi",
+        "maxi",
+        "adult"
+      ],
+      "createdAt": "2026-08-27T20:08:47.477Z",
+      "updatedAt": "2026-08-31T15:04:49.044Z"
+    },
+    {
+      "id": "baby-monkey",
+      "title": "Baby Monkey",
+      "summary": "The back player only scores while the chest stays glued to the partner's back.",
+      "setup": "Bottom player on all fours in turtle. Top player starts on the back with both arms around the chest.",
+      "goal": "Top: keep chest-to-back contact and charge the counter to 10.\nBottom: break the contact and stand up or turn in.",
+      "winCondition": "Top scores when the count reaches 10. Bottom scores by breaking contact for 3 seconds.",
+      "resetRule": "After any score, swap roles and restart from turtle.",
+      "variations": [
+        "Counting continues only while the chest touches the back.",
+        "Top may use one arm only, and the count goes to 15.",
+        "Bottom starts half turned, so the top has to rebuild the contact first.",
+        "Shrink the square by a third."
+      ],
+      "story": "The little monkey has to hold on to its mother while she climbs. If it lets go, it falls. Cue: 'Halt dich fest!'",
+      "labels": [
+        "midi",
+        "maxi",
+        "back-control",
+        "chest-to-chest",
+        "turtle",
+        "rear-naked-choke"
+      ],
+      "createdAt": "2026-09-09T11:37:49.096Z",
+      "updatedAt": "2026-09-09T11:37:49.096Z"
+    },
+    {
+      "id": "river-crossing",
+      "title": "River Crossing",
+      "summary": "One player has to cross a taped line on the mat while the other keeps them on their side.",
+      "setup": "Pairs facing each other, kneeling, on either side of a mat line.",
+      "goal": "Crosser: get any body part fully past the line.\nBlocker: hold them on their own side for the whole round.",
+      "winCondition": "One point per crossing. Highest count when time runs out.",
+      "resetRule": "After a crossing, both return to their starting side.",
+      "variations": [
+        "Both players stay on their knees.",
+        "Only hips across the line count, not a hand.",
+        "Add a second blocker and widen the crossing zone so both fit.",
+        "The smaller player always takes the crossing role."
+      ],
+      "story": "The river is cold and the bridge is guarded.",
+      "labels": [
+        "mini",
+        "midi",
+        "dog-fight",
+        "scramble",
+        "warm-up"
+      ],
+      "createdAt": "2026-09-09T11:37:49.096Z",
+      "updatedAt": "2026-09-09T11:37:49.096Z"
+    },
+    {
+      "id": "two-on-one",
+      "title": "Two On One",
+      "summary": "Establish two grips on one arm and move your partner around.",
+      "setup": "Both players standing and facing each other, each holding one of the partner's wrists.",
+      "goal": "Get both hands connected onto one of your partner's arms. Then move your partner around.",
+      "winCondition": "Holding two hands on one arm for three seconds scores.",
+      "resetRule": "After a score, both reset to a single wrist grip each.",
+      "variations": [
+        "You can only hold on to the hands and the forearms or your partner.",
+        "You have to use your shoulder and/or your head to move your partner around."
+      ],
+      "story": "",
+      "labels": [
+        "maxi",
+        "adult",
+        "arm-drag",
+        "grip-fight",
+        "wrestling"
+      ],
+      "createdAt": "2026-08-31T11:46:50.445Z",
+      "updatedAt": "2026-08-31T13:05:25.658Z"
+    },
+    {
+      "id": "knee-tap",
+      "title": "Knee Tap",
+      "summary": "Get one wrist behind your partner's knee.",
+      "setup": "Both players stand next to each other, in an over under clinch, one arm over and one arm under.",
+      "goal": "Land a wrist behind either of your partner's knees.",
+      "winCondition": "A wrist behind a knee for 3 seconds wins.",
+      "resetRule": "Every knee tap resets to the over under clinch.",
+      "variations": [
+        "Only the underhook side arm may score.",
+        "Only the far knee counts can be attacked.",
+        "Instead of over under, everyone gets one grip on their partner's wrist.",
+        "For kids, the 3 seconds rule does not work well. Use laundry clips attached to their pants around their knees. The goal becomes to snatch the partners laundry clips."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "adult",
+        "dog-fight",
+        "single-leg",
+        "laundry-clips",
+        "wrestling"
+      ],
+      "createdAt": "2026-08-31T11:46:50.445Z",
+      "updatedAt": "2026-08-31T13:04:55.041Z"
+    },
+    {
+      "id": "merry-go-round",
+      "title": "Merry Go Round",
+      "summary": "The top player circles to get around the legs, the bottom player turns with them and stays facing.",
+      "setup": "Bottom player in open guard with the feet towards the top player, either sitting up or lying on their back. Top player in front of them, standing or on their knees.",
+      "goal": "Top: circle around the legs and get to the side or the back.\nBottom: keep turning so the legs stay between the two of you.",
+      "winCondition": "The top player scores by getting past the legs and putting their chest on the side or the back. The bottom player scores by staying face to face for the whole round.",
+      "resetRule": "After a score, reset face to face and swap roles.",
+      "variations": [
+        "The bottom player sits upright, leans slightly forward and turns on their seat, pushing off with a hand and a foot.",
+        "The bottom player lies flat on their back and turns on their shoulders, keeping the feet pointed at the top player.",
+        "Lying flat, the bottom player puts their feet on the partner's legs or hips and uses their movement to be carried around.",
+        "The top player may only circle in one direction, so changing direction becomes its own problem to solve later.",
+        "No hands for the bottom player. Turning with legs and hips only."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "adult",
+        "guard",
+        "back-control"
+      ],
+      "createdAt": "2026-09-09T00:00:00.000Z",
+      "updatedAt": "2026-09-09T00:00:00.000Z"
+    },
+    {
+      "id": "knee-wrestling",
+      "title": "Knee Wrestling",
+      "summary": "Both on their knees, put your partner over on their side without going over yourself.",
+      "setup": "Both players kneeling and facing each other, close enough to reach, hands free.",
+      "goal": "Put your partner down on their side or their back while staying up yourself.",
+      "winCondition": "A point when your partner lands on their side or back. Nobody scores if you both go over together.",
+      "resetRule": "Back to kneeling and facing each other after every point.",
+      "variations": [
+        "Hands behind the back. Shoulders and chest only, which is where the bear comes from.",
+        "Both players start with a collar tie.",
+        "Both players hold one cloth between them and may only pull and push on that.",
+        "You may not sit back on your heels, so nobody parks there and waits.",
+        "Give each pair their own square, so a fall never lands on the pair next door."
+      ],
+      "story": "Two bears meet on a narrow path and neither wants to step aside. Or two sumo in the ring, whoever goes over first loses.",
+      "labels": [
+        "mini",
+        "wrestling"
+      ],
+      "createdAt": "2026-09-09T00:00:00.000Z",
+      "updatedAt": "2026-09-09T00:00:00.000Z"
+    },
+    {
+      "id": "gatekeeper",
+      "title": "Gatekeeper",
+      "summary": "Seated against standing. The top player hunts side control or mount, the bottom player hunts four connections or their feet.",
+      "setup": "Bottom player seated with the legs in front. Top player standing, facing them, within reach.",
+      "goal": "Top: get to side control or mount.\nBottom: build four connections onto the top player's legs, or stand up.",
+      "winCondition": "The top player scores by holding side control or mount for three seconds. The bottom player scores by holding four connections for three seconds, or by standing up facing them.",
+      "resetRule": "Back to seated and standing after every score. Swap roles each round.",
+      "variations": [
+        "Four connections are not enough any more, they have to turn into a sweep. Name the sweep before the round, a dummy sweep or a knee reap.",
+        "The top player may only circle and may not drive straight in, which is Merry Go Round with the passing goals added.",
+        "The bottom player may not use their hands. Connections with legs and hips only.",
+        "Standing up only counts if the bottom player comes up facing, not by turning away.",
+        "The top player starts already with both hands on the shins."
+      ],
+      "story": "",
+      "labels": [
+        "maxi",
+        "adult",
+        "guard",
+        "full-mount"
+      ],
+      "createdAt": "2026-09-09T00:00:00.000Z",
+      "updatedAt": "2026-09-09T00:00:00.000Z"
+    }
+  ]
+}
