@@ -52,7 +52,7 @@ Changing the architecture in the skill.
 | --- | --- | --- | --- |
 | the page today | `index.html` | everything: the data model, the filter, the storage, the views, import and export | |
 | the published catalog | `games.json` | the catalog everyone sees, in the data model's shape, with its `schemaVersion` | anything only one browser changed |
-| repository tooling | `scripts/`, `.github/` | telling a pull request that main no longer merges, the templates for pull requests and issues | anything about games |
+| repository files | `.github/` | the templates for pull requests and issues | anything about games |
 | client, planned | not yet | drawing, and passing on what the person did | a rule, or state of its own |
 | server, planned | not yet | the API and the core | anything about a screen or a click |
 

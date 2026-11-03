@@ -88,8 +88,7 @@ in the proof.
 
 - **Subscribe to its events the moment it is opened** or taken over, so
   everything that needs the session reaches it by itself: a CI run that
-  fails or passes, a review, a comment, and the notice that main no
-  longer merges into it.
+  fails or passes, a review, a comment, and a conflict with main.
 - **Act on each event at once.** A failing CI run is still your work, so
   is a conflict, so is a review comment.
 - **Never poll, never set up a recurring check,** and never write a
@@ -101,12 +100,10 @@ in the proof.
 - **Merge main in for a conflict, and only then.** Main moving is no
   reason to merge it into a pull request: the merge adds a commit and a
   CI run, and changes nothing being tested.
-- **When main no longer merges,** the repository's Main moved workflow,
-  `.github/workflows/main-moved.yml`, comments on the pull request with
-  the files in conflict. That comment wakes the session. It merges main
-  in at once, without asking, resolves the conflict, reads `CLAUDE.md`
-  and the skills again, because main may have changed them, runs the
-  tests of what the resolution touches, and pushes. GitHub runs no CI on
+- **When main no longer merges,** the session merges main in at once,
+  without asking, resolves the conflict, reads `CLAUDE.md` and the
+  skills again, because main may have changed them, runs the tests of
+  what the resolution touches, and pushes. GitHub runs no CI on
   a pull request in conflict with main, so one is never left that way
   while it waits for the user.
 

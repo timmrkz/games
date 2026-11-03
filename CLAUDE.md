@@ -41,7 +41,6 @@ Where a skill meets this repository:
 | the place the project names for a review | a file in `/mnt/project-files/reviews/`, named after the pull request, never committed and never posted on GitHub |
 | logged | a GitHub issue, written the way [.github/ISSUE_TEMPLATE/issue.md](.github/ISSUE_TEMPLATE/issue.md) lays it out |
 | how a pull request is described | [.github/pull_request_template.md](.github/pull_request_template.md) |
-| the notice that main moved | the comment `.github/workflows/main-moved.yml` posts as `github-actions[bot]` |
 
 ## How Tim works
 
