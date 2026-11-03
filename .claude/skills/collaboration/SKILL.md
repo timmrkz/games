@@ -112,7 +112,9 @@ triages by. The sizes are the T-shirt sizes many teams on GitHub use.
 | `size/medium` | One pull request. |
 | `size/large` | More than one pull request. |
 
-Whoever opens an issue sets both, by judgement from the table. The user
+Whoever opens an issue sets both, by judgement from the table. A label
+the repository does not have yet is made the first time an issue needs
+it, with exactly the name the table gives. The user
 moves any label they see differently, and their label stands. Someone
 else who sees one differently says so in a comment on the issue.
 

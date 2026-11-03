@@ -17,8 +17,9 @@ only renders what it sends. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 ## The skills
 
 How we work is in the skills in `.claude/skills/`. They are written for
-any project and name nothing of ours. Read the one for the work before
-starting it.
+any project, so their rules name no file or part of ours, and only some
+of their examples come from this catalog. Read the one for the work
+before starting it.
 
 | Skill | For |
 | --- | --- |

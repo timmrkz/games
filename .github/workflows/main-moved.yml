@@ -47,6 +47,7 @@ jobs:
     # branch is not ours to speak for.
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       # Main with the whole history, because merging needs the common
       # ancestor. On a pull request too, so the script that runs is
