@@ -50,8 +50,8 @@ say.
 <!--
 No heading here. At most 30 words: what goes wrong or what is asked,
 who saw it happen or asked for it, and where. For example: "On a phone,
-a game edited offline is gone after the page reloads. Tim saw it at
-training on 3 November."
+an item edited offline is gone after the page reloads. The user saw it
+testing #10 on 3 November."
 -->
 
 ## Progress

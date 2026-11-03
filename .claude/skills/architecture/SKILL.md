@@ -38,6 +38,13 @@ and changed, and what shape we build toward.
     says what the other side relies on.
   - **Not to copy.** Code that breaks the map today, each with the issue
     that fixes it.
+- **The layers are drawn, not only listed.** Each drawing is plain SVG
+  in `docs/diagrams/`: the layers as boxes from the top down, an arrow
+  down the side for "may use", the path under each box's name, and its
+  parts as small chips. It follows the reader's light or dark theme
+  with `prefers-color-scheme`, on a background of its own, and names
+  only paths that exist. A change that moves a box changes its drawing
+  in the same pull request.
 - **A line is added only for a new kind of thing:** a new part, a new
   home for state, a new boundary. A change that brings one adds its line
   in the same pull request. Rewording is not a change of the
@@ -91,8 +98,8 @@ the person did. It is a renderer, and nothing more.
 What follows from it:
 
 - **The client asks, the server answers.** The client sends an intent,
-  "add this label to this game", never a result it worked out, "here is
-  the game with its new label list". The server validates it, applies
+  "add this tag to this item", never a result it worked out, "here is
+  the item with its new list of tags". The server validates it, applies
   it, and sends back the new state or what changed.
 - **The client keeps no state of its own.** What it shows is what the
   server last sent. The only state it holds is what the hand is doing
@@ -175,7 +182,7 @@ it names that record. When in doubt, it is one.
 The shape is Michael Nygard's
 [architecture decision record](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions),
 with the five simulations in the middle. A file is named by the date and
-what it decides, `2026-11-03-labels-filtered-on-the-server.md`, never by
+what it decides, `2026-11-03-search-filtered-on-the-server.md`, never by
 a number, because two pull requests open at once would take the same
 number. It holds:
 

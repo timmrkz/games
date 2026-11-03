@@ -48,10 +48,10 @@ for.
   anywhere but in that list. When there is nothing, the list says so in
   one line. For example:
 
-  **This thread:** the filter chain, made to fit on a phone (#14)
+  **This thread:** the search filters, made to fit on a phone (#14)
   **For you:**
-  1. Open the catalog on your phone, add four labels to the filter. The
-     chain should wrap inside the screen.
+  1. Open the search on your phone and add four filters. They should
+     wrap inside the screen.
   2. Merge #14 when it looks right.
 
 - **Every reply about a pull request says how it stands:** whether CI

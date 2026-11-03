@@ -13,9 +13,9 @@ in .claude/skills/.
 No heading here. For each issue, at most 30 words: what goes wrong or
 what was asked, who saw it happen and where, and what gets better. Then
 `Fixes #N` for each issue this finishes, so merging closes it. For
-example: "Fixes #12. On a phone, the filter chain wrapped off the screen
-and its last label could not be removed. Tim found it at training. Now
-it wraps inside the screen."
+example: "Fixes #12. On a phone, the search filters ran off the screen
+and the last one could not be removed. The user found it testing #10.
+Now they wrap inside the screen."
 -->
 
 ## Root cause

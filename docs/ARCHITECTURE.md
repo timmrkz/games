@@ -14,12 +14,7 @@ says both. New code is written for the second.
 
 ### Today: one page
 
-```
-index.html   the page, its styles and its script, all in one file
-  │            rules, state, storage and drawing together
-  ├── games.json      the published catalog, fetched next to the page
-  └── localStorage    what this browser changed on top of it
-```
+![The page today: one file holds every layer](diagrams/today.svg)
 
 The page is served as static files by GitHub Pages, at the domain in
 `CNAME`. There is no build step and no server of our own. The page loads
@@ -29,13 +24,7 @@ catalog as JSON, and committing that as `games.json` publishes it.
 
 ### Where we go: the server owns, the client renders
 
-```
-1  client     draws what the server sent, sends what the person did
-                 │ the API: intents in, state out
-2  server API  turns a request into a call on the core, and back
-3  core       every rule about games, labels, groups and filters
-4  storage    plain files first, a database once it is needed
-```
+![Where we go: the server owns, the client renders](diagrams/target.svg)
 
 A part may use the parts under it and knows nothing of the parts over
 it. Every rule lives in the core, where the API reaches it. The client
@@ -45,6 +34,11 @@ right now, see section 4 of the architecture skill.
 The move from the first to the second is #4. It has its decision record in
 `docs/decisions/`, with its five candidates, before its first code, see
 Changing the architecture in the skill.
+
+The drawings are plain SVG in `docs/diagrams/`, a box a `rect` with its
+texts and a chip a small `rect` with its text, and they follow the
+reader's light or dark theme, on a background of their own. A change
+that moves a box changes its drawing in the same pull request.
 
 ## Code map
 
