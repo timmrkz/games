@@ -1,0 +1,29 @@
+# The checks of a pull request and of main. Today the app is one page with
+# no build and no tests of its own, so the only code with a test is the
+# tooling around the repository. Each job is one command, so CI and a
+# session run the same thing. A job is added here once there is code for
+# it to check, with a path filter, so a change runs only what it reaches.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# A new push to a pull request stops the run for the commit before. CI on
+# main is never stopped, so every commit there keeps its own result.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  scripts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: main-moved.sh
+        run: sh scripts/main-moved-test.sh
