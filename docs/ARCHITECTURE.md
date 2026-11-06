@@ -73,6 +73,7 @@ Not to copy.
 | --- | --- |
 | add or change a rule about games, labels or groups | today in `index.html`, beside the rule of its kind, and named under Not to copy if it is new. Until the server's decision record is merged, a feature built this way counts as the same, not worse, in a review, because there is nowhere else for it to go yet. Once the server is built, the core, never the client |
 | decide which games match a filter | today `evaluateChain` and `matches` in `index.html`. Once the server is built, the core |
+| decide which games are related | today `relatedGames` in `index.html`, from the groups whose `relates` is on. Once the server is built, the core |
 | check that a game or an import is valid | today `normalize` in `index.html`, the one reader of a catalog from outside. Once the server is built, the server, at its boundary |
 | show a new fact about a game | today the template that draws it in `index.html`. Once the server is built, a field the API sends, drawn by the client |
 | store something | today the catalog's shape, through `save()` and an export. Once the server is built, the server's storage. Never a second key in `localStorage` |
@@ -110,7 +111,8 @@ one. They are the state to move away from, not the pattern for new
 code.
 
 - The rules in `index.html`: the filter chain, `evaluateChain`,
-  `matches` and `matchesQuery`, the checks in `normalize`, what a label
+  `matches` and `matchesQuery`, which games are related in
+  `relatedGames`, the checks in `normalize`, what a label
   is used by in `labelUsage`, how ids are made in `slug` and `uniqueId`,
   #4.
 - The state in the browser: the local layer in `localStorage` and its

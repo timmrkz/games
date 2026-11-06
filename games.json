@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 10,
+  "schemaVersion": 11,
   "labels": [
     {
       "id": "adult",
@@ -158,6 +158,7 @@
     {
       "id": "audience",
       "name": "Audience",
+      "relates": false,
       "labels": [
         "mini",
         "midi",
@@ -167,34 +168,50 @@
     },
     {
       "id": "focus",
-      "name": "Focus",
+      "name": "Topic",
+      "relates": false,
       "labels": [
-        "arm-drag",
-        "back-control",
-        "chest-to-chest",
-        "closed-guard",
-        "collar-tie",
-        "dog-fight",
-        "double-leg",
-        "foot-sweep",
-        "front-headlock",
-        "full-guard",
-        "full-mount",
-        "grip-fight",
         "guard",
-        "half-guard",
-        "knee-on-belly",
-        "north-south",
-        "scramble",
-        "single-leg",
-        "turtle",
         "warm-up",
         "wrestling"
       ]
     },
     {
+      "id": "position",
+      "name": "Position",
+      "relates": true,
+      "labels": [
+        "back-control",
+        "chest-to-chest",
+        "closed-guard",
+        "front-headlock",
+        "full-guard",
+        "full-mount",
+        "half-guard",
+        "knee-on-belly",
+        "north-south",
+        "turtle"
+      ]
+    },
+    {
+      "id": "action",
+      "name": "Action",
+      "relates": true,
+      "labels": [
+        "arm-drag",
+        "collar-tie",
+        "dog-fight",
+        "double-leg",
+        "foot-sweep",
+        "grip-fight",
+        "scramble",
+        "single-leg"
+      ]
+    },
+    {
       "id": "submission",
       "name": "Submission",
+      "relates": true,
       "labels": [
         "anaconda-choke",
         "arm-bar",
@@ -206,6 +223,7 @@
     {
       "id": "equipment",
       "name": "Equipment",
+      "relates": false,
       "labels": [
         "cloth",
         "dodge-ball",
