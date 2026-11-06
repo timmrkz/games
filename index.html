@@ -191,6 +191,10 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 .labelfoot > h4{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;font-stretch:118%;margin:0 0 12px}
 .lvals{display:flex;flex-wrap:wrap;gap:6px}
 
+/* related games: the catalog's own cards, between the game's text and its labels */
+.related{border-top:1px solid var(--line);margin-top:10px;padding-top:14px;padding-bottom:22px}
+.related > h4{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;font-stretch:118%;margin:0 0 12px}
+
 /* ============================================================
    FORMS (editor + label manager)
    ============================================================ */
@@ -245,8 +249,8 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 .lab-group{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
   padding:16px 18px 18px;margin-bottom:14px}
 .lab-group-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;
-  padding-bottom:10px;border-bottom:1px solid var(--line-soft)}
-.lab-group-head input{flex:1;min-width:0;background:transparent;border:1px solid transparent;
+  padding-bottom:10px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.lab-group-head input{flex:1;min-width:min(100%,180px);background:transparent;border:1px solid transparent;
   border-radius:var(--r);padding:4px 7px;margin-left:-7px;
   font-family:var(--display);font-stretch:112%;font-size:16px;font-weight:700;color:var(--ink)}
 .lab-group-head input:hover:not(:disabled){border-color:var(--line);background:var(--panel-2)}
@@ -254,6 +258,14 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 .lab-group-head input:disabled{color:var(--ink-soft)}
 .lab-group-head .count{font-family:var(--mono);font-size:11px;color:var(--ink-soft);white-space:nowrap}
 .lab-group-head .btn{padding:5px 10px;font-size:12px}
+/* The switch on a group: amber when its labels relate games. */
+.switch{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);
+  border-radius:var(--r);padding:4px 10px 4px 6px;font-size:12px;color:var(--ink-soft);white-space:nowrap}
+.switch .knob{width:26px;height:14px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line);position:relative}
+.switch .knob::after{content:"";position:absolute;top:1px;left:1px;width:10px;height:10px;border-radius:50%;background:var(--ink-soft)}
+.switch[aria-checked="true"]{color:var(--accent);border-color:var(--accent)}
+.switch[aria-checked="true"] .knob{background:var(--accent);border-color:var(--accent)}
+.switch[aria-checked="true"] .knob::after{left:13px;background:var(--on-accent)}
 
 /* 140px is the widest minimum that still fits two columns inside a card on a
    phone. Chips, the add-label field and the add-group field all sit on this
@@ -463,10 +475,12 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 
    DATA MODEL (stored in localStorage under KEY, exported as JSON)
    {
-     schemaVersion: 10,
+     schemaVersion: 11,
      labels: [ { id, name } ],       // one flat list, sorted by name
-     groups: [ { id, name, labels:[labelId] } ],  // organisation only, for the
-                                     // Labels page. Filtering never sees them.
+     groups: [ { id, name, relates, labels:[labelId] } ],  // the Labels page's
+                                     // sections. Filtering never sees them.
+                                     // relates: true when two games sharing
+                                     // a label of this group are related.
      games:  [ {
        id, title,
        summary,                      // one line, shown on the catalog card
@@ -487,15 +501,21 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
    OR turtle. Each connector belongs to the pair it sits between, there is no
    global mode. The chain is evaluated strictly left to right, no precedence,
    so it reads the way it is written. Free-text search applies on top.
+
+   RELATED GAMES
+   Two games are related when they share a label from a group whose relates is
+   true. Such groups hold where the bodies are and what the players do, like
+   Turtle, Back Control or Arm Bar. Nothing about a relation is stored, it is
+   worked out from the labels every time.
    ============================================================================ */
 
 /* Bump on every change. Shown next to the title, so you can tell at a
    glance whether the page you are looking at is the current build. */
-const BUILD = "2026-11-03.1";
+const BUILD = "2026-11-06.2";
 
 const KEY = "bjj-games-catalog";
 const PUBLISHED = "games.json";   // optional, sits next to index.html
-const SCHEMA = 10;
+const SCHEMA = 11;
 
 /* ---------------------------------------------------------------------------
    Small helpers
@@ -575,7 +595,7 @@ function toast(msg){
    file, so both layers agree on ids.
    --------------------------------------------------------------------------- */
 const BUILT_IN = {
-    "schemaVersion": 10,
+    "schemaVersion": 11,
     "labels": [
       {
         "id": "adult",
@@ -734,6 +754,7 @@ const BUILT_IN = {
       {
         "id": "audience",
         "name": "Audience",
+        "relates": false,
         "labels": [
           "mini",
           "midi",
@@ -743,34 +764,50 @@ const BUILT_IN = {
       },
       {
         "id": "focus",
-        "name": "Focus",
+        "name": "Topic",
+        "relates": false,
         "labels": [
-          "arm-drag",
-          "back-control",
-          "chest-to-chest",
-          "closed-guard",
-          "collar-tie",
-          "dog-fight",
-          "double-leg",
-          "foot-sweep",
-          "front-headlock",
-          "full-guard",
-          "full-mount",
-          "grip-fight",
           "guard",
-          "half-guard",
-          "knee-on-belly",
-          "north-south",
-          "scramble",
-          "single-leg",
-          "turtle",
           "warm-up",
           "wrestling"
         ]
       },
       {
+        "id": "position",
+        "name": "Position",
+        "relates": true,
+        "labels": [
+          "back-control",
+          "chest-to-chest",
+          "closed-guard",
+          "front-headlock",
+          "full-guard",
+          "full-mount",
+          "half-guard",
+          "knee-on-belly",
+          "north-south",
+          "turtle"
+        ]
+      },
+      {
+        "id": "action",
+        "name": "Action",
+        "relates": true,
+        "labels": [
+          "arm-drag",
+          "collar-tie",
+          "dog-fight",
+          "double-leg",
+          "foot-sweep",
+          "grip-fight",
+          "scramble",
+          "single-leg"
+        ]
+      },
+      {
         "id": "submission",
         "name": "Submission",
+        "relates": true,
         "labels": [
           "anaconda-choke",
           "arm-bar",
@@ -782,6 +819,7 @@ const BUILT_IN = {
       {
         "id": "equipment",
         "name": "Equipment",
+        "relates": false,
         "labels": [
           "cloth",
           "dodge-ball",
@@ -1126,7 +1164,9 @@ function normalize(store){
 
   const filed = {};
   const groups = (Array.isArray(store.groups) ? store.groups : [])
-    .map(g => ({ id: g.id || slug(g.name || ""), name: (g.name || "").trim(), labels: (g.labels || []).slice() }))
+    // Version 10 had no relates, so its groups only ever filtered.
+    .map(g => ({ id: g.id || slug(g.name || ""), name: (g.name || "").trim(), relates: g.relates === true,
+                 labels: (g.labels || []).slice() }))
     .filter(g => g.name);
 
   // A label belongs to one group at most, and only to a group if it exists.
@@ -1224,6 +1264,22 @@ function mergeLocal(baseStore, local){
   groups.forEach(g => { g.labels = g.labels.filter(id => known.indexOf(id) >= 0); });
   games.forEach(g => { g.labels = (g.labels || []).filter(id => known.indexOf(id) >= 0); });
 
+  // A group changed here is stored whole, so it keeps the labels it had when
+  // it was changed, even after the published catalog moved some of them to
+  // another group. Nothing on the page moves a label between groups, so the
+  // published filing is the newer one and wins. A copy made before version 11
+  // has no relates, and takes the published one.
+  const filedIn = {};
+  baseStore.groups.forEach(g => g.labels.forEach(id => { filedIn[id] = g.id; }));
+  groups.forEach(g => {
+    const published = baseStore.groups.find(b => b.id === g.id);
+    if(typeof g.relates !== "boolean") g.relates = published ? published.relates : false;
+    if(published) g.labels = g.labels.filter(id => !filedIn[id] || filedIn[id] === g.id);
+  });
+  // A label belongs to one group at most, as normalize keeps it.
+  const filed = {};
+  groups.forEach(g => { g.labels = g.labels.filter(id => filed[id] ? false : (filed[id] = true)); });
+
   return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
 }
 
@@ -1320,6 +1376,19 @@ function ungroupedLabels(){
 /** How many games carry a label. */
 function labelUsage(id){
   return db.games.filter(g => (g.labels || []).indexOf(id) >= 0).length;
+}
+
+/** The other games that share a label from a group that relates games, each
+    with the labels it shares, the most shared first. */
+function relatedGames(game){
+  const relating = db.groups.filter(g => g.relates).flatMap(g => g.labels);
+  const mine = gameLabels(game).filter(id => relating.indexOf(id) >= 0);
+  return db.games
+    .filter(other => other.id !== game.id)
+    .map(other => ({ game: other, shared: gameLabels(other).filter(id => mine.indexOf(id) >= 0) }))
+    .filter(r => r.shared.length)
+    .sort((a, b) => b.shared.length - a.shared.length
+      || a.game.title.localeCompare(b.game.title, undefined, { sensitivity: "base" }));
 }
 
 /* ---------------------------------------------------------------------------
@@ -1546,7 +1615,7 @@ function renderResults(){
   if(query) bits.push("search: " + query);
   $("#activeFilters").textContent = bits.length ? "\u00b7 " + bits.join(" \u00b7 ") : "";
 
-  $("#grid").innerHTML = list.map(cardHTML).join("");
+  $("#grid").innerHTML = list.map(game => cardHTML(game)).join("");
   $$("#grid [data-open]").forEach(btn => btn.onclick = () => openDetail(btn.dataset.open));
 
   // Tapping a label on a card starts or extends the filter, tapping it again
@@ -1572,8 +1641,10 @@ function renderResults(){
   renderPrint(list);
 }
 
-function cardHTML(game){
-  const ids = gameLabels(game);
+/** One game's card. `shown` limits the labels on it, for a related game,
+    which shows only the labels it shares. */
+function cardHTML(game, shown){
+  const ids = Array.isArray(shown) ? shown : gameLabels(game);
 
   // A card is no longer one big button, because the labels inside it are
   // buttons of their own and a button cannot contain another one.
@@ -1597,7 +1668,15 @@ function renderDetail(id){
   const game = db.games.find(g => g.id === id);
   if(!game) return;
   currentId = id;
-  $("#detailBody").innerHTML = detailHTML(game);
+  const host = $("#detailBody");
+  host.innerHTML = detailHTML(game);
+  $$("[data-open]", host).forEach(btn => btn.onclick = () => openDetail(btn.dataset.open));
+  // A label on a related game adds it to the filter, as on any card, and
+  // shows the catalog. Back returns to this game.
+  $$("[data-label]", host).forEach(btn => btn.onclick = () => {
+    addToChain(btn.dataset.label);
+    go({ view: "Catalog" });
+  });
 }
 
 function openDetail(id, replace){
@@ -1641,8 +1720,14 @@ function detailHTML(game){
   const layout = `<div class="dcols${columns.length < 2 ? " single" : ""}">`
     + columns.map(col => `<div>${col}</div>`).join("") + `</div>`;
 
+  // Related games sit under the game's own text and above its labels.
+  const related = relatedGames(game);
+  const relatedBlock = related.length ? `<div class="related"><h4>Related games \u00b7 ${related.length}</h4>
+      <div class="grid">${related.map(r => cardHTML(r.game, r.shared)).join("")}</div></div>` : "";
+
   return `<div class="dhead"><h2>${esc(game.title)}</h2></div>
     ${layout}
+    ${relatedBlock}
     ${labelFooter}`;
 }
 
@@ -2028,6 +2113,10 @@ function renderLabelManager(){
         turtle on its own.</p>
         <p>Groups exist so this page stays readable. Renaming a label updates it on every game that uses
         it. Deleting one removes it everywhere, and deleting a group removes its labels too.</p>
+        <p>A group with <strong>Relates games</strong> switched on holds labels about where the bodies are
+        or what the players do, like turtle, back control or arm bar. Two games that share one of them are
+        shown as related on each other's page. A label takes its purpose from its group, so a new label
+        made while editing a game only filters until it is put in such a group.</p>
       </div>
     </details>`;
 
@@ -2045,6 +2134,9 @@ function renderLabelManager(){
         <input type="text" ${editable ? `data-group-name="${esc(group.id)}"` : "disabled"}
                value="${esc(group.name)}" aria-label="Group name">
         <span class="count">${group.labels.length} label${group.labels.length === 1 ? "" : "s"}</span>
+        ${editable ? `<button class="switch" role="switch" aria-checked="${group.relates ? "true" : "false"}"
+          data-group-relates="${esc(group.id)}"
+          title="Games that share a label from this group are shown as related games"><span class="knob"></span>Relates games</button>` : ""}
         ${editable ? `<button class="btn btn-sm btn-danger" data-group-delete="${esc(group.id)}">Delete group</button>` : ""}
       </div>
       <div class="lab-chips">${group.labels.map(chip).join("")
@@ -2081,6 +2173,14 @@ function renderLabelManager(){
     db.groups = db.groups.filter(g => g.id !== group.id);
     save();
     renderLabelManager();
+  });
+
+  $$("[data-group-relates]", host).forEach(btn => btn.onclick = () => {
+    const group = db.groups.find(g => g.id === btn.dataset.groupRelates);
+    if(!group) return;
+    group.relates = !group.relates;
+    btn.setAttribute("aria-checked", group.relates ? "true" : "false");
+    save();
   });
 
   $$("[data-label-name]", host).forEach(field => field.onchange = () => {
@@ -2120,7 +2220,7 @@ function renderLabelManager(){
     e.preventDefault();
     const name = newGroup.value.trim();
     if(!name) return;
-    db.groups.push({ id: uniqueId(slug(name), db.groups.map(g => g.id)), name: name, labels: [] });
+    db.groups.push({ id: uniqueId(slug(name), db.groups.map(g => g.id)), name: name, relates: false, labels: [] });
     save();
     renderLabelManager();
   };
