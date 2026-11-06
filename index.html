@@ -1605,9 +1605,9 @@ function renderLabelList(){
   });
 }
 
-/** Clear all shows only while there is something for it to clear. */
+/** Clear all shows only while the list of games is filtered. */
 function showClearAll(){
-  $("#btnClear").hidden = !(chain.length || query || labelQuery);
+  $("#btnClear").hidden = !(chain.length || query.trim());
 }
 
 function renderResults(){
@@ -2344,7 +2344,7 @@ function importJSON(file){
    Wiring
    --------------------------------------------------------------------------- */
 $("#q").oninput = e => { query = e.target.value; renderCatalog(); };
-$("#labelSearch").oninput = e => { labelQuery = e.target.value; renderLabelList(); showClearAll(); };
+$("#labelSearch").oninput = e => { labelQuery = e.target.value; renderLabelList(); };
 $("#home").onclick = toCatalog;
 $("#btnNew").onclick = () => openEdit(null);
 $("#emptyNew").onclick = () => openEdit(null);
@@ -2422,6 +2422,9 @@ $("#btnClear").onclick = () => {
   labelQuery = "";
   $("#q").value = "";
   $("#labelSearch").value = "";
+  // The button hides itself now, so a keyboard user keeps their place
+  // on the row instead of dropping back to the top of the page.
+  if(document.activeElement === $("#btnClear")) $("#railToggle").focus();
   renderCatalog();
   closeSearch(false);
   toast("Filters cleared");
