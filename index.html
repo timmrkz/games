@@ -505,13 +505,13 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
    RELATED GAMES
    Two games are related when they share a label from a group whose relates is
    true. Such groups hold where the bodies are and what the players do, like
-   Turtle, Back Take or Arm Bar. Nothing about a relation is stored, it is
+   Turtle, Back Control or Arm Bar. Nothing about a relation is stored, it is
    worked out from the labels every time.
    ============================================================================ */
 
 /* Bump on every change. Shown next to the title, so you can tell at a
    glance whether the page you are looking at is the current build. */
-const BUILD = "2026-11-06.1";
+const BUILD = "2026-11-06.2";
 
 const KEY = "bjj-games-catalog";
 const PUBLISHED = "games.json";   // optional, sits next to index.html
@@ -1264,6 +1264,22 @@ function mergeLocal(baseStore, local){
   groups.forEach(g => { g.labels = g.labels.filter(id => known.indexOf(id) >= 0); });
   games.forEach(g => { g.labels = (g.labels || []).filter(id => known.indexOf(id) >= 0); });
 
+  // A group changed here is stored whole, so it keeps the labels it had when
+  // it was changed, even after the published catalog moved some of them to
+  // another group. Nothing on the page moves a label between groups, so the
+  // published filing is the newer one and wins. A copy made before version 11
+  // has no relates, and takes the published one.
+  const filedIn = {};
+  baseStore.groups.forEach(g => g.labels.forEach(id => { filedIn[id] = g.id; }));
+  groups.forEach(g => {
+    const published = baseStore.groups.find(b => b.id === g.id);
+    if(typeof g.relates !== "boolean") g.relates = published ? published.relates : false;
+    if(published) g.labels = g.labels.filter(id => !filedIn[id] || filedIn[id] === g.id);
+  });
+  // A label belongs to one group at most, as normalize keeps it.
+  const filed = {};
+  groups.forEach(g => { g.labels = g.labels.filter(id => filed[id] ? false : (filed[id] = true)); });
+
   return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
 }
 
@@ -1655,11 +1671,11 @@ function renderDetail(id){
   const host = $("#detailBody");
   host.innerHTML = detailHTML(game);
   $$("[data-open]", host).forEach(btn => btn.onclick = () => openDetail(btn.dataset.open));
-  // A label on a related game shows every game that carries it.
+  // A label on a related game adds it to the filter, as on any card, and
+  // shows the catalog. Back returns to this game.
   $$("[data-label]", host).forEach(btn => btn.onclick = () => {
-    chain = [];
     addToChain(btn.dataset.label);
-    toCatalog();
+    go({ view: "Catalog" });
   });
 }
 
@@ -2098,7 +2114,7 @@ function renderLabelManager(){
         <p>Groups exist so this page stays readable. Renaming a label updates it on every game that uses
         it. Deleting one removes it everywhere, and deleting a group removes its labels too.</p>
         <p>A group with <strong>Relates games</strong> switched on holds labels about where the bodies are
-        or what the players do, like turtle, back take or arm bar. Two games that share one of them are
+        or what the players do, like turtle, back control or arm bar. Two games that share one of them are
         shown as related on each other's page. A label takes its purpose from its group, so a new label
         made while editing a game only filters until it is put in such a group.</p>
       </div>
