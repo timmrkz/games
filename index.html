@@ -400,7 +400,7 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
       <button class="btn btn-sm" id="railToggle" aria-expanded="false" aria-controls="rail">Filters</button>
       <span class="count" id="count"></span>
       <span class="count" id="activeFilters"></span>
-      <button class="btn btn-sm" id="btnClear" style="margin-left:auto">Clear all</button>
+      <button class="btn btn-sm" id="btnClear" style="margin-left:auto" hidden>Clear all</button>
     </div>
     <aside class="rail" id="rail" data-collapsed="true">
       <div class="chain" id="chain"></div>
@@ -1605,6 +1605,11 @@ function renderLabelList(){
   });
 }
 
+/** Clear all shows only while there is something for it to clear. */
+function showClearAll(){
+  $("#btnClear").hidden = !(chain.length || query || labelQuery);
+}
+
 function renderResults(){
   const list = filteredGames();
   $("#count").textContent = list.length + " of " + db.games.length + " games";
@@ -1614,6 +1619,7 @@ function renderResults(){
   if(chainText()) bits.push(chainText());
   if(query) bits.push("search: " + query);
   $("#activeFilters").textContent = bits.length ? "\u00b7 " + bits.join(" \u00b7 ") : "";
+  showClearAll();
 
   $("#grid").innerHTML = list.map(game => cardHTML(game)).join("");
   $$("#grid [data-open]").forEach(btn => btn.onclick = () => openDetail(btn.dataset.open));
@@ -2338,7 +2344,7 @@ function importJSON(file){
    Wiring
    --------------------------------------------------------------------------- */
 $("#q").oninput = e => { query = e.target.value; renderCatalog(); };
-$("#labelSearch").oninput = e => { labelQuery = e.target.value; renderLabelList(); };
+$("#labelSearch").oninput = e => { labelQuery = e.target.value; renderLabelList(); showClearAll(); };
 $("#home").onclick = toCatalog;
 $("#btnNew").onclick = () => openEdit(null);
 $("#emptyNew").onclick = () => openEdit(null);
