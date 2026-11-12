@@ -181,7 +181,7 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 .kv dd{margin:0;white-space:pre-wrap}
 .prose{margin:0;white-space:pre-wrap;font-size:14.5px}
 
-/* Variations: a plain list, since they are alternatives rather than steps. */
+/* Solutions and variations: plain lists, since they are alternatives rather than steps. */
 .varlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .varlist li{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
   padding:10px 12px;font-size:14px;line-height:1.5}
@@ -475,7 +475,7 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 
    DATA MODEL (stored in localStorage under KEY, exported as JSON)
    {
-     schemaVersion: 11,
+     schemaVersion: 12,
      labels: [ { id, name } ],       // one flat list, sorted by name
      groups: [ { id, name, relates, labels:[labelId] } ],  // the Labels page's
                                      // sections. Filtering never sees them.
@@ -487,14 +487,17 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
        setup, goal,                  // the invariant core
        winCondition, resetRule,
        variations: [ text ],         // free text, one line per way to change it
+       solutions: [ text ],          // free text, one line per way to solve it,
+                                     // shown once the players have tried it
        story,                        // framing and mat cues
        labels: [ labelId ],          // a flat list, no groups
        createdAt, updatedAt
      } ]
    }
 
-   The same shape is used for games.json, for an export, and for the built-in
-   catalog. Storage is described above the storage block below.
+   The same shape is used for games.json and for an export. The built-in
+   catalog is an older version of it, read the same way. Storage is described
+   above the storage block below.
 
    FILTERING
    The filter is a chain of labels joined by connectors: warm up AND grip fight
@@ -511,11 +514,11 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 
 /* Bump on every change. Shown next to the title, so you can tell at a
    glance whether the page you are looking at is the current build. */
-const BUILD = "2026-11-06.2";
+const BUILD = "2026-11-12.1";
 
 const KEY = "bjj-games-catalog";
 const PUBLISHED = "games.json";   // optional, sits next to index.html
-const SCHEMA = 11;
+const SCHEMA = 12;
 
 /* ---------------------------------------------------------------------------
    Small helpers
@@ -585,14 +588,13 @@ function toast(msg){
 }
 
 /* ---------------------------------------------------------------------------
-   Seed data — used only on first run, when localStorage is empty.
-   --------------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------------
    The built-in catalog
 
-   Used when games.json is not reachable, which is the case in a preview and
-   when the page is opened straight from disk. Kept identical to the published
-   file, so both layers agree on ids.
+   Shown only when there is no games.json to show: in a preview, when the page
+   is opened straight from disk, or when the file is empty. When games.json is
+   there it replaces this catalog whole, nothing of it is merged in. So this
+   copy is frozen and is not kept in step with games.json. New games go into
+   games.json only.
    --------------------------------------------------------------------------- */
 const BUILT_IN = {
     "schemaVersion": 11,
@@ -1154,6 +1156,9 @@ function builtInCatalog(){
    state, so committing it as games.json publishes exactly what you see.
    --------------------------------------------------------------------------- */
 
+/** A list of free-text lines, without the blank ones. */
+const lines = list => (Array.isArray(list) ? list : []).map(v => String(v || "").trim()).filter(Boolean);
+
 /** Coerce a catalog, from the published file or an import, into a valid shape. */
 function normalize(store){
   const labels = (Array.isArray(store.labels) ? store.labels : [])
@@ -1186,8 +1191,9 @@ function normalize(store){
     goal: g.goal || "",
     winCondition: g.winCondition || "",
     resetRule: g.resetRule || "",
-    variations: (Array.isArray(g.variations) ? g.variations : [])
-      .map(v => String(v || "").trim()).filter(Boolean),
+    variations: lines(g.variations),
+    // Version 11 had no solutions.
+    solutions: lines(g.solutions),
     story: g.story || "",
     labels: (Array.isArray(g.labels) ? g.labels : []).filter(id => known.indexOf(id) >= 0),
     createdAt: g.createdAt || now(),
@@ -1448,6 +1454,7 @@ function matchesQuery(game){
     game.title, game.summary, game.setup, game.goal,
     game.winCondition, game.resetRule, game.story,
     (game.variations || []).join(" "),
+    (game.solutions || []).join(" "),
     (game.labels || []).map(labelName).join(" ")
   ].join(" ").toLowerCase();
   return query.toLowerCase().split(/\s+/).filter(Boolean).every(term => haystack.includes(term));
@@ -1464,8 +1471,6 @@ function matches(game){
 
 const filteredGames = () => db.games.filter(g => matches(g));
 
-/** Variations that actually say something. Blank lines are not shown or counted. */
-const realVariations = game => (game.variations || []).filter(v => v && v.trim());
 
 /** Human-readable label for a stored value id. */
 /* ---------------------------------------------------------------------------
@@ -1704,14 +1709,12 @@ function detailHTML(game){
     left += `<div class="block"><h4>Story</h4><p class="prose">${esc(game.story)}</p></div>`;
   }
 
-  // Right column: progression.
-  let right = "";
-  const variations = realVariations(game);
-  if(variations.length){
-    right = `<div class="block"><h4>Variations</h4><ul class="varlist">`
-      + variations.map(text => `<li>${esc(text)}</li>`).join("")
-      + `</ul></div>`;
-  }
+  // Right column: what to show once they tried it, then progression.
+  const list = (title, items) => items.length
+    ? `<div class="block"><h4>${title}</h4><ul class="varlist">`
+      + items.map(text => `<li>${esc(text)}</li>`).join("") + `</ul></div>`
+    : "";
+  const right = list("Solutions", lines(game.solutions)) + list("Variations", lines(game.variations));
 
   // Footer: labels grouped by facet, spread across the available width.
   const tags = gameLabels(game).map(id => `<span class="tag">${esc(labelName(id))}</span>`).join("");
@@ -1744,7 +1747,7 @@ function blankGame(){
   return {
     id: uid("g"), title: "", summary: "",
     setup: "", goal: "", winCondition: "", resetRule: "",
-    variations: [],
+    variations: [], solutions: [],
     story: "", labels: [],
     createdAt: now(), updatedAt: now()
   };
@@ -1753,6 +1756,8 @@ function blankGame(){
 /** Load a game into the editor. Navigation is the caller's job. */
 function renderEditPage(id){
   draft = id ? JSON.parse(JSON.stringify(db.games.find(g => g.id === id))) : blankGame();
+  // A game this browser changed before version 12 was stored without solutions.
+  if(!Array.isArray(draft.solutions)) draft.solutions = [];
   editingExisting = !!id;
   $("#editTitle").textContent = id ? "Edit game" : "New game";
   renderEditor();
@@ -1785,9 +1790,14 @@ function renderEditor(){
     + textarea("f-reset", "Reset rule", g.resetRule, "What happens after a score.")
     + `</div>`
 
+    + `<div class="block"><h4>Solutions</h4>
+       <div id="solutionsRows"></div>
+       <button type="button" class="btn btn-sm" data-add-row="solutions">Add solution</button>
+       <div class="hint">One line each. A technique or an idea that solves the game, shown once the players have tried it themselves.</div></div>`
+
     + `<div class="block"><h4>Variations</h4>
-       <div id="variationRows"></div>
-       <button type="button" class="btn btn-sm" id="addVariation">Add variation</button>
+       <div id="variationsRows"></div>
+       <button type="button" class="btn btn-sm" data-add-row="variations">Add variation</button>
        <div class="hint">One line each. Anything you might change on the day, a tighter win condition, a different connection, a smaller space.</div></div>`
 
     + `<div class="block"><h4>Labels</h4><div id="labelPickers"></div></div>`
@@ -1804,14 +1814,15 @@ function renderEditor(){
   bindField("f-reset", "resetRule");
   bindField("f-story", "story");
 
-  renderVariationRows();
+  Object.keys(LISTS).forEach(renderListRows);
   renderLabelPickers();
-  $("#addVariation").onclick = () => {
-    draft.variations.push("");
-    renderVariationRows();
-    const rows = $$("[data-variation]");
+  $$("[data-add-row]").forEach(btn => btn.onclick = () => {
+    const key = btn.dataset.addRow;
+    draft[key].push("");
+    renderListRows(key);
+    const rows = $$("[data-row]", $("#" + key + "Rows"));
     if(rows.length) rows[rows.length - 1].focus();
-  };
+  });
 }
 
 /** Keep one plain input or textarea in sync with a top-level draft field. */
@@ -1820,32 +1831,40 @@ function bindField(elementId, key){
   if(el) el.oninput = e => { draft[key] = e.target.value; };
 }
 
-function renderVariationRows(){
-  const host = $("#variationRows");
+/* The lists of free-text lines a game has, and what one line is called. */
+const LISTS = {
+  variations: { one: "variation", placeholder: "What changes" },
+  solutions:  { one: "solution",  placeholder: "What solves it" }
+};
+
+/** Draw the editable rows of one list of the draft, variations or solutions. */
+function renderListRows(key){
+  const host = $("#" + key + "Rows");
+  const kind = LISTS[key];
 
   const grip = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/>
     <circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/>
     <circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>`;
 
-  host.innerHTML = draft.variations.map((text, i) => `
+  host.innerHTML = draft[key].map((text, i) => `
     <div class="repeat-row var-row">
       <button type="button" class="grip" data-grip="${i}"
-              aria-label="Reorder variation ${i + 1}, use the arrow keys or drag">${grip}</button>
-      <textarea data-variation="${i}" rows="2" placeholder="What changes">${esc(text)}</textarea>
-      <button type="button" class="x" data-variation-remove="${i}" aria-label="Remove variation">\u00d7</button>
+              aria-label="Reorder ${kind.one} ${i + 1}, use the arrow keys or drag">${grip}</button>
+      <textarea data-row="${i}" rows="2" placeholder="${kind.placeholder}">${esc(text)}</textarea>
+      <button type="button" class="x" data-row-remove="${i}" aria-label="Remove ${kind.one}">\u00d7</button>
     </div>`).join("");
 
-  $$("[data-variation]", host).forEach(field =>
-    field.oninput = e => { draft.variations[Number(e.target.dataset.variation)] = e.target.value; });
+  $$("[data-row]", host).forEach(field =>
+    field.oninput = e => { draft[key][Number(e.target.dataset.row)] = e.target.value; });
 
-  $$("[data-variation-remove]", host).forEach(btn =>
-    btn.onclick = () => { draft.variations.splice(Number(btn.dataset.variationRemove), 1); renderVariationRows(); });
+  $$("[data-row-remove]", host).forEach(btn =>
+    btn.onclick = () => { draft[key].splice(Number(btn.dataset.rowRemove), 1); renderListRows(key); });
 
-  wireVariationDragging(host);
+  wireRowDragging(host, key);
 }
 
-/* Reordering variations.
+/* Reordering the rows of a list.
 
    Rows are moved in the DOM as you drag rather than being re-rendered, so the
    text you are editing is never rebuilt underneath you. The array is read back
@@ -1853,7 +1872,7 @@ function renderVariationRows(){
    held, otherwise you could not select text in the box next to it. Touch gets
    its own handlers because HTML5 dragging does not fire on a touchscreen, and
    the arrow keys do the same job from the keyboard. */
-function wireVariationDragging(host){
+function wireRowDragging(host, key){
   const rows = () => $$(".var-row", host);
 
   /** The row whose middle is nearest below the pointer, ignoring the one held. */
@@ -1871,8 +1890,8 @@ function wireVariationDragging(host){
 
   /** Read the order back out of the DOM, which also picks up any edits. */
   const commit = () => {
-    draft.variations = $$(".var-row textarea", host).map(field => field.value);
-    renderVariationRows();
+    draft[key] = $$(".var-row textarea", host).map(field => field.value);
+    renderListRows(key);
   };
 
   let held = null;
@@ -1924,10 +1943,10 @@ function wireVariationDragging(host){
       e.preventDefault();
       const from = Number(handle.dataset.grip);
       const to = e.key === "ArrowUp" ? from - 1 : from + 1;
-      if(to < 0 || to >= draft.variations.length) return;
-      const moved = draft.variations.splice(from, 1)[0];
-      draft.variations.splice(to, 0, moved);
-      renderVariationRows();
+      if(to < 0 || to >= draft[key].length) return;
+      const moved = draft[key].splice(from, 1)[0];
+      draft[key].splice(to, 0, moved);
+      renderListRows(key);
       const next = $(`[data-grip="${to}"]`, host);
       if(next) next.focus();
     };
@@ -2089,8 +2108,9 @@ function saveDraft(){
     if(first) first.focus();
     return;
   }
-  // Drop variation rows that were added but never written.
-  draft.variations = draft.variations.map(v => v.trim()).filter(Boolean);
+  // Drop rows that were added but never written.
+  draft.variations = lines(draft.variations);
+  draft.solutions = lines(draft.solutions);
   draft.updatedAt = now();
 
   const index = db.games.findIndex(g => g.id === draft.id);
@@ -2249,7 +2269,8 @@ function dropLabel(id){
    --------------------------------------------------------------------------- */
 function renderPrint(list){
   $("#printarea").innerHTML = `<div class="pcards">` + list.map(game => {
-    const variations = realVariations(game);
+    const variations = lines(game.variations);
+    const solutions = lines(game.solutions);
     return `<div class="pcard">
       <h3>${esc(game.title)}</h3>
       <p class="pline">${esc(game.summary)}</p>
@@ -2257,6 +2278,8 @@ function renderPrint(list){
         ${game.setup ? `<dt>Setup</dt><dd>${esc(game.setup)}</dd>` : ""}
         ${game.goal ? `<dt>Goal</dt><dd>${esc(game.goal)}</dd>` : ""}
         ${game.winCondition ? `<dt>Win</dt><dd>${esc(game.winCondition)}</dd>` : ""}
+        ${solutions.length
+          ? `<dt>Solutions</dt><dd>${solutions.map(esc).join(" \u00b7 ")}</dd>` : ""}
         ${variations.length
           ? `<dt>Variations</dt><dd>${variations.map(esc).join(" \u00b7 ")}</dd>` : ""}
       </dl>
