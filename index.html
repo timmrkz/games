@@ -1183,7 +1183,15 @@ function normalize(store){
     });
   });
 
-  const games = (Array.isArray(store.games) ? store.games : []).map(g => ({
+  const games = (Array.isArray(store.games) ? store.games : []).map(readGame)
+    .map(g => Object.assign(g, { labels: g.labels.filter(id => known.indexOf(id) >= 0) }));
+
+  return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
+}
+
+/** One game from outside, in the current shape. Labels are checked by the caller. */
+function readGame(g){
+  return {
     id: g.id || uid("g"),
     title: (g.title || "Untitled").trim(),
     summary: g.summary || "",
@@ -1195,12 +1203,10 @@ function normalize(store){
     // Version 11 had no solutions.
     solutions: lines(g.solutions),
     story: g.story || "",
-    labels: (Array.isArray(g.labels) ? g.labels : []).filter(id => known.indexOf(id) >= 0),
+    labels: Array.isArray(g.labels) ? g.labels.slice() : [],
     createdAt: g.createdAt || now(),
     updatedAt: g.updatedAt || now()
-  }));
-
-  return { schemaVersion: SCHEMA, labels: labels, groups: groups, games: games };
+  };
 }
 
 /** The published catalog, or the built-in one when there is no published file. */
@@ -1233,7 +1239,8 @@ function loadLocal(){
     if(!local) return EMPTY_LOCAL();
     const list = key => Array.isArray(local[key]) ? local[key] : [];
     return {
-      games: list("games"), deletedGames: list("deletedGames"),
+      // Read like any game, so one saved before a new field gains it.
+      games: list("games").map(readGame), deletedGames: list("deletedGames"),
       labels: list("labels"), deletedLabels: list("deletedLabels"),
       groups: list("groups"), deletedGroups: list("deletedGroups")
     };
@@ -1756,8 +1763,6 @@ function blankGame(){
 /** Load a game into the editor. Navigation is the caller's job. */
 function renderEditPage(id){
   draft = id ? JSON.parse(JSON.stringify(db.games.find(g => g.id === id))) : blankGame();
-  // A game this browser changed before version 12 was stored without solutions.
-  if(!Array.isArray(draft.solutions)) draft.solutions = [];
   editingExisting = !!id;
   $("#editTitle").textContent = id ? "Edit game" : "New game";
   renderEditor();
@@ -2290,7 +2295,17 @@ function renderPrint(list){
 /* ---------------------------------------------------------------------------
    Export and import
    --------------------------------------------------------------------------- */
-function exportJSON(){
+async function exportJSON(){
+  // Without games.json the page shows the frozen built-in catalog, which is
+  // not the published one. Committing that export would take games away.
+  if(!publishedFound){
+    const choice = await ask(
+      "Export the built-in games?",
+      "This page found no " + PUBLISHED + ", so it shows the built-in games, not the published catalog. Committing this export as " + PUBLISHED + " would remove every game added since.",
+      [{ label: "Export anyway", value: "export", kind: "danger" },
+       { label: "Cancel", value: "cancel" }]);
+    if(choice !== "export") return;
+  }
   const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -2491,7 +2506,7 @@ function updateBuildNote(){
   $("#buildNote").innerHTML =
     `Build ${esc(BUILD)}<br>Data: ${esc(source)}<br>` +
     (pending ? `<span class="pending">${pending} unpublished change${pending === 1 ? "" : "s"}</span>`
-             : "In sync with published data");
+             : publishedFound ? "In sync with published data" : "No published data found");
 }
 
 /* Overflow menu. Opens on tap, closes on a second tap, on a choice, on

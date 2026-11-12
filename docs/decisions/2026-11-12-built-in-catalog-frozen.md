@@ -80,6 +80,12 @@ and draws it.
   the file shows the 12 games it holds today.
 - Buys: one place to add a game, `games.json`, and no check to keep.
   Closes #5.
+- Risk: an export from a page without `games.json` holds only the
+  built-in games, and committing it would remove every game added
+  since. Export now asks before it does that.
+- Not simulated: fetching the published catalog from the live site when
+  the file next to the page is missing. It would make a preview show
+  the current games, at the cost of the page reaching another origin.
 - What would show it wrong: someone relying on the built-in catalog
   being current, or a local change that was made against `BUILT_IN`
   and is then shown against `games.json`. Both were possible before
