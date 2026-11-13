@@ -18,8 +18,9 @@ says both. New code is written for the second.
 
 The page is served as static files by GitHub Pages, at the domain in
 `CNAME`. There is no build step and no server of our own. The page loads
-`games.json`, lays what this browser changed on top of it from
-`localStorage`, and draws the result. An export writes the merged
+`games.json`, or its own frozen built-in catalog when there is none, lays
+what this browser changed on top of it from `localStorage`, and draws the
+result. An export writes the merged
 catalog as JSON, and committing that as `games.json` publishes it.
 
 ### Where we go: the server owns, the client renders
@@ -53,13 +54,12 @@ that moves a box changes its drawing in the same pull request.
 ## Where state lives
 
 Every piece of state has one home and one writer. Today the page breaks
-that in two places, the built-in seed and the local layer, both under
-Not to copy.
+that in one place, the local layer, under Not to copy.
 
 | State | Home today | Writer today | Home once the server is built |
 | --- | --- | --- | --- |
 | the published catalog | `games.json` | an export, committed by hand | the server's storage, written by the core |
-| a second copy of the published catalog, for when `games.json` cannot be fetched | `BUILT_IN` in `index.html`, kept identical to `games.json` by hand, with nothing that checks it | whoever edits `games.json` | gone |
+| a frozen catalog, shown only when there is no `games.json`, and replaced whole when there is one | `BUILT_IN` in `index.html`, never changed and not kept in step with `games.json`, see [the decision](decisions/2026-11-12-built-in-catalog-frozen.md) | nobody | gone |
 | the catalog as this page loaded it | `base` in `index.html` | `loadBase()` | gone |
 | what this browser changed | `localStorage`, under the key in `KEY`, as the difference from `base` | `save()` | gone. Every change goes to the server |
 | the catalog this page shows, `base` with the local changes on top | `db` in `index.html` | `mergeLocal()` at start, and an import | what the server last sent |
@@ -71,6 +71,7 @@ Not to copy.
 
 | I need to | It goes |
 | --- | --- |
+| add a game | `games.json` only, never `BUILT_IN` |
 | add or change a rule about games, labels or groups | today in `index.html`, beside the rule of its kind, and named under Not to copy if it is new. Until the server's decision record is merged, a feature built this way counts as the same, not worse, in a review, because there is nowhere else for it to go yet. Once the server is built, the core, never the client |
 | decide which games match a filter | today `evaluateChain` and `matches` in `index.html`. Once the server is built, the core |
 | decide which games are related | today `relatedGames` in `index.html`, from the groups whose `relates` is on. Once the server is built, the core |
@@ -87,12 +88,11 @@ Not to copy.
    go through `normalize`. Held by the review.
 2. Text from the catalog is escaped where it is shown, by `esc`. Held by
    the review.
-3. One shape of the catalog, the same for `games.json`, an export and the
-   built-in seed, described at the top of the script in `index.html`.
+3. One shape of the catalog, the same for `games.json` and an export,
+   described at the top of the script in `index.html`. The built-in
+   catalog is an older version of it, which `normalize` still reads.
    Held by the review.
-4. `BUILT_IN` in `index.html` is the same catalog as `games.json`. Held
-   by nothing yet, #5.
-5. Once the server is built: every rule is in the core, and the client
+4. Once the server is built: every rule is in the core, and the client
    holds none. Held by the review, and by the API, which sends state and
    takes intents.
 
@@ -118,5 +118,3 @@ code.
 - The state in the browser: the local layer in `localStorage` and its
   merge onto the published catalog, `mergeLocal` and `localChanges`, #4.
 - A catalog published by committing an export by hand, #4.
-- `BUILT_IN` in `index.html`, a second copy of `games.json` that nothing
-  holds to it, #5.

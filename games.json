@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 11,
+  "schemaVersion": 12,
   "labels": [
     {
       "id": "adult",
@@ -134,8 +134,16 @@
       "name": "Scramble"
     },
     {
+      "id": "self-defense",
+      "name": "Self Defense"
+    },
+    {
       "id": "single-leg",
       "name": "Single Leg"
+    },
+    {
+      "id": "stand-up",
+      "name": "Stand Up"
     },
     {
       "id": "tennis-ball",
@@ -173,7 +181,8 @@
       "labels": [
         "guard",
         "warm-up",
-        "wrestling"
+        "wrestling",
+        "self-defense"
       ]
     },
     {
@@ -205,7 +214,8 @@
         "foot-sweep",
         "grip-fight",
         "scramble",
-        "single-leg"
+        "single-leg",
+        "stand-up"
       ]
     },
     {
@@ -535,6 +545,105 @@
       ],
       "createdAt": "2026-10-11T00:00:00.000Z",
       "updatedAt": "2026-10-11T00:00:00.000Z"
+    },
+    {
+      "id": "stand-up",
+      "title": "Stand Up",
+      "summary": "Seated against standing. The bottom player has to get up, the standing player keeps them down.",
+      "setup": "Bottom player seated with the legs in front. Top player standing, facing them.",
+      "goal": "Bottom: stand up, without turning your back.\nTop: keep the bottom player from standing up, and take the back if they turn away.",
+      "winCondition": "The bottom player wins by standing up. The top player wins by taking the back.",
+      "resetRule": "Back to seated and standing after every win. Swap roles each round.",
+      "variations": [],
+      "solutions": [
+        "Technical stand-up: post one hand behind you and the opposite foot in front, lift the hips and swing the other leg through and back, so you come up quickly, backwards and away from your partner.",
+        "Wrestle up: grab one of your partner's legs, push into them and lift the leg until you are standing yourself."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense",
+        "stand-up",
+        "back-control"
+      ],
+      "createdAt": "2026-11-12T00:00:00.000Z",
+      "updatedAt": "2026-11-12T00:00:00.000Z"
+    },
+    {
+      "id": "stand-up-from-mount",
+      "title": "Stand Up From Mount",
+      "summary": "From the bottom of mount, get out and get up. The top player sits without using their hands.",
+      "setup": "Bottom player flat on their back. Top player sitting in mount, without using their hands.",
+      "goal": "Bottom: get out from under the top player and stand up.\nTop: stay in mount, without the hands.",
+      "winCondition": "The bottom player wins by standing up.",
+      "resetRule": "Back to mount after every win. Swap roles each round.",
+      "variations": [
+        "The top player may use their hands."
+      ],
+      "solutions": [
+        "Knee elbow escape: frame against your partner's hips, shrimp out to one side and bring your knee to your elbow, get your leg back in front of you, then stand up.",
+        "Stiff arm: put the hand of a straight arm on your partner's arm, come up onto the other elbow, and keep pushing until you reverse the situation."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense",
+        "stand-up",
+        "full-mount"
+      ],
+      "createdAt": "2026-11-12T00:00:00.000Z",
+      "updatedAt": "2026-11-12T00:00:00.000Z"
+    },
+    {
+      "id": "stand-up-from-turtle",
+      "title": "Stand Up From Turtle",
+      "summary": "From turtle, get up. The top player kneels beside you with one arm around your hip.",
+      "setup": "Bottom player in turtle. Top player kneeling next to them, with one arm around their hip.",
+      "goal": "Bottom: stand up.\nTop: keep the bottom player from standing up, and take the back when it opens.",
+      "winCondition": "The bottom player wins by standing up. The top player wins by taking the back.",
+      "resetRule": "Back to turtle after every win. Swap roles each round.",
+      "variations": [],
+      "solutions": [],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense",
+        "stand-up",
+        "turtle",
+        "back-control"
+      ],
+      "createdAt": "2026-11-12T00:00:00.000Z",
+      "updatedAt": "2026-11-12T00:00:00.000Z"
+    },
+    {
+      "id": "grip-break",
+      "title": "Grip Break",
+      "summary": "One player holds on to the other, who has to break the grip and get away.",
+      "setup": "Both players standing, facing each other. One player grips the other, on the collar, on the jacket or on a wrist.",
+      "goal": "Free: break the grip and step out of reach.\nGrip: keep holding on.",
+      "winCondition": "The free player wins by breaking the grip and stepping out of reach. The gripping player wins by holding on for 10 seconds.",
+      "resetRule": "Back to a new grip after every win. Swap roles each round.",
+      "variations": [
+        "A grip on the collar.",
+        "A grip on the jacket, on the lapel or the sleeve.",
+        "A grip on one wrist, with one hand.",
+        "A grip on one wrist, with both hands."
+      ],
+      "solutions": [
+        "Wrist: turn your wrist towards the gripping thumb, the weakest part of the grip, and pull out through the gap."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense",
+        "grip-fight"
+      ],
+      "createdAt": "2026-11-12T00:00:00.000Z",
+      "updatedAt": "2026-11-12T00:00:00.000Z"
     }
   ]
 }
