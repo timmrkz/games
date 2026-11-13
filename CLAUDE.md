@@ -24,7 +24,7 @@ before starting it.
 | Skill | For |
 | --- | --- |
 | [architecture](.claude/skills/architecture/SKILL.md) | where a change goes, the server and client split, changing the design |
-| [engineering](.claude/skills/engineering/SKILL.md) | how any change is made, root causes, build, CI, docs, measurements |
+| [engineering](.claude/skills/engineering/SKILL.md) | how any change is made, root causes, build, CI, speed, docs, measurements |
 | [testing](.claude/skills/testing/SKILL.md) | how every test is written, fixed and reviewed, and how a bug is found |
 | [pull-requests](.claude/skills/pull-requests/SKILL.md) | how a pull request is opened, sized, described, watched and made ready |
 | [review](.claude/skills/review/SKILL.md) | how a pull request is reviewed by an agent that did none of the work |
