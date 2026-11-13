@@ -580,7 +580,8 @@ every push, by the people waiting on CI and by the machines.
   - never turn the test cache off across the board, like Go's
     `-count=1`. It is for a test that reads what the cache cannot see.
   - no reading of the time, a random seed or a file that changes every
-    run into what a test checks, or its result is never cached.
+    run into what a test checks, or its result is never cached. A
+    random test takes its seed from the commit, see section 11.
   - keep the test selection flags stable, caches are keyed on them.
   - CI keeps its build cache, its test cache, its dependencies and its
     downloads from one run to the next.
@@ -597,6 +598,11 @@ every push, by the people waiting on CI and by the machines.
   shares, and then a comment says which. Off the disk, with a file system
   in memory. A mockup or a screenshot to settle where something goes
   needs no realistic fixture at all.
+- **Less work makes a job shorter, less waiting hardly does.** A CI
+  machine running several tests at once keeps its cores busy. When one
+  test waits less, the others take the time it freed, and the job ends
+  only a little sooner. Fewer frames drawn, fewer runs, fewer starts of
+  the product are what shorten it.
 - **Every test file and every CI job earns its place.** Say what it
   guards and what it costs. Test tooling stays small, uses the tools'
   own features, and keeps fixtures as plain files, not text inside a
@@ -683,6 +689,20 @@ A test is code we keep. It must still be right and readable in a year.
   from scratch, which costs seconds on every run. A new case goes into
   a test that is already there, and a new one says why no test there
   could take its steps.
+- **A random test takes its seed from the commit.** A test that picks
+  its steps at random prints its seed, and the same seed takes the same
+  steps again. In CI the seed is worked out from the commit under test,
+  so every push tries ground no push tried before, and a run of one
+  commit stays the same and cacheable. A seed that fails has found a
+  bug, never a flake, even on a pull request that did not cause it,
+  because the next push takes another seed and walks past it. That seed
+  is kept in a file beside the tests, with a line on what it found, and
+  every push runs it from then on. If the pull request cannot fix the
+  bug, it becomes an issue and the seed waits in the file for its fix.
+- **The cheapest engine on every push, every engine at night.** Where
+  the same steps run in more than one browser engine, a push runs them
+  in the one that costs least, and the night runs them in all of them,
+  with a failure there logged like any other.
 
 ## 12. CI holds the rules
 
