@@ -648,6 +648,27 @@
       ],
       "createdAt": "2026-11-12T00:00:00.000Z",
       "updatedAt": "2026-11-12T00:00:00.000Z"
+    },
+    {
+      "id": "headlock-escape",
+      "title": "Headlock Escape",
+      "summary": "Standing side headlock. The top player holds on, the bottom player has to get their head out.",
+      "setup": "Both players standing, facing the same direction. The top player has the bottom player in a headlock from the side.",
+      "goal": "Bottom: escape from the headlock.\nTop: hold on to the headlock.",
+      "winCondition": "The bottom player wins by getting their head out of the headlock. The top player wins by holding on for 10 seconds.",
+      "resetRule": "Back to a new headlock after every win. Swap roles each round.",
+      "variations": [],
+      "solutions": [
+        "Protect, thread and walk out: put one hand between the top player's arm and your throat, to make a little space and stop the choke. Reach the other arm around the top player's back and thread it through the hole under their headlock arm, so you grip their left arm with one hand and their right arm with the other. Then turn and walk backwards around the top player, hips and body first, until the headlock breaks open."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense"
+      ],
+      "createdAt": "2026-11-14T00:00:00.000Z",
+      "updatedAt": "2026-11-14T00:00:00.000Z"
     }
   ]
 }
