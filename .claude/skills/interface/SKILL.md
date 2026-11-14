@@ -60,6 +60,13 @@ be.
   the way, one question at a time, always about where the hand is now, and
   keep the last answer until the saved state comes back, so nothing jumps
   as the hand lets go.
+- **Everything drawn from the dragged thing comes from one answer.** The
+  list is easy to make one item short: a fix makes one line follow a
+  dragged edge, and the marks it runs between, drawn from the saved
+  state, stay where they were, so the line runs from nothing. Let the
+  answer to the hand carry everything drawn from the thing, in the shape
+  the saved state is sent, and draw every part from that one answer. A
+  part read from anywhere else is the one left behind.
 - **Work a click starts is built in front of the person.** What it asks
   for is shown where it will live from the moment it is asked for, brought
   into view, and filled in as each part becomes known. Nothing appears
@@ -168,8 +175,9 @@ measures. Decide what kind of bug it is before picking the instrument:
   page and read the thing on every `requestAnimationFrame` for a second,
   then print the runs of frames that looked the same. A run of the state
   before the click is the bug. A screenshot never shows it.
-- **A drag is read at each step,** before the hand lets go. A number
-  that only changes after the release is the bug.
+- **A drag is read at each step,** before the hand lets go, every part
+  drawn from the dragged thing, not only the one the fix was about. A
+  number that only changes after the release is the bug.
 - **The fake is as slow as the real thing.** A fake server that answers at
   once hides exactly the gap a person sees.
 - **The engine people use.** A browser engine of its own, WebKit on

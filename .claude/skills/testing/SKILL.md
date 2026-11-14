@@ -324,6 +324,7 @@ nothing more than a field, a parameter or an option:
 | random numbers | a source of randomness |
 | a network service, a model, a database | an interface, with a fake the test drives |
 | a program the code runs | its path or a runner |
+| hardware or a system service outside the code, a hardware codec, a driver, a keychain | a value the program hands in, absent by default, see below |
 | the end of work | a channel, callback or event the caller gives |
 
 - The program hands in the real thing. A test hands in one it drives.
@@ -339,6 +340,43 @@ nothing more than a field, a parameter or an option:
   needed it got a sleep instead.
 - The interface the same: a module that keeps time takes its timer, or
   is tested under fake timers.
+
+### Test up to the boundary you own
+
+A product hands work to systems it does not own: the operating system's
+media engine, a graphics driver, a keychain, a service in the cloud. What
+the product owns is what it hands over, the arguments, the request, the
+order of the calls. What the system then does with them is the system's
+code, on the machine the test happens to run on, which is rarely a
+machine people use. A test that runs it tests the system: a virtual
+machine's media engine that hangs says nothing about the product. This
+is ports and adapters, Alistair Cockburn's hexagonal architecture: the
+product meets the outside at a port, the real system is the adapter
+behind it, and a test stands in for the adapter.
+
+- **The product does not reach for the system by itself.** It is handed
+  it, the way it is handed the network: the program's own `main` hands
+  the real one, and what a test makes gets none, so it runs the plain
+  path in the product's own code or a stand-in. Code that picks the
+  system by the operating system it finds itself on reaches it from
+  every test on that system too.
+- **What is handed over is the test.** A stand-in records the arguments
+  or the request, and the test checks them against what the real system
+  took on a real machine, argument by argument. It runs on every machine
+  in milliseconds, and a change to what the system is asked shows there
+  first.
+- **The line is what differs between machines.** A library the project
+  builds itself and runs the same everywhere may run in a test, because
+  what it makes of the product's input is the product's behaviour. What
+  changes from one machine to the next, hardware, a driver, a system
+  framework, is behind the port.
+- **When a real machine breaks the contract,** the input that broke it
+  goes into the test of what is handed over, and the adapter is fixed
+  for it. A run of the real system in CI is not the answer, because CI's
+  machine is not the one that broke.
+- Something that fails on one machine and passes on another is first a
+  question of whether the test reaches past the boundary, before it is a
+  question of the product, section 6.
 
 ### Shapes that test well
 
@@ -409,7 +447,9 @@ happening there. A bug report asks the same.
      CI runner and its virtual hardware, on a busy machine, with a
      stand-in program or a file made for the test? Look there first.
      What the environment's own hardware or programs do is fixed in how
-     the test uses them, never in the product. What the test fed the
+     the test uses them, never in the product, and a test that reaches
+     them at all is the first thing to change, see Test up to the
+     boundary you own in section 5. What the test fed the
      product decides it, not where it ran: input from outside, like a
      fuzzer's bytes, or an order of the product's own work that a busy
      machine only made likelier, is the product's to fix.
@@ -540,7 +580,8 @@ every push, by the people waiting on CI and by the machines.
   - never turn the test cache off across the board, like Go's
     `-count=1`. It is for a test that reads what the cache cannot see.
   - no reading of the time, a random seed or a file that changes every
-    run into what a test checks, or its result is never cached.
+    run into what a test checks, or its result is never cached. A
+    random test takes its seed from the commit, see section 11.
   - keep the test selection flags stable, caches are keyed on them.
   - CI keeps its build cache, its test cache, its dependencies and its
     downloads from one run to the next.
@@ -557,6 +598,11 @@ every push, by the people waiting on CI and by the machines.
   shares, and then a comment says which. Off the disk, with a file system
   in memory. A mockup or a screenshot to settle where something goes
   needs no realistic fixture at all.
+- **Less work makes a job shorter, less waiting hardly does.** A CI
+  machine running several tests at once keeps its cores busy. When one
+  test waits less, the others take the time it freed, and the job ends
+  only a little sooner. Fewer frames drawn, fewer runs, fewer starts of
+  the product are what shorten it.
 - **Every test file and every CI job earns its place.** Say what it
   guards and what it costs. Test tooling stays small, uses the tools'
   own features, and keeps fixtures as plain files, not text inside a
@@ -631,6 +677,32 @@ A test is code we keep. It must still be right and readable in a year.
   browser engine or a platform of its own, run the same steps there too
   before saying it works there. Typing, focus, hover, painting and timing
   are where engines differ.
+- **Only what the window can show.** An interface test checks two
+  things: that a key or a click does what the person meant, and that
+  the screen shows what the core sent. Rules the core decides, file
+  formats and long lists of values go in unit tests of the core, and the
+  interface test checks once that the screen shows the result. Time in
+  an interface test runs on a clock the test moves, the timers and
+  anything that plays too, so a minute of animation or sound runs as
+  fast as its frames can be drawn.
+- **Add a step, not a test.** Every interface test starts the product
+  from scratch, which costs seconds on every run. A new case goes into
+  a test that is already there, and a new one says why no test there
+  could take its steps.
+- **A random test takes its seed from the commit.** A test that picks
+  its steps at random prints its seed, and the same seed takes the same
+  steps again. In CI the seed is worked out from the commit under test,
+  so every push tries ground no push tried before, and a run of one
+  commit stays the same and cacheable. A seed that fails has found a
+  bug, never a flake, even on a pull request that did not cause it,
+  because the next push takes another seed and walks past it. That seed
+  is kept in a file beside the tests, with a line on what it found, and
+  every push runs it from then on. If the pull request cannot fix the
+  bug, it becomes an issue and the seed waits in the file for its fix.
+- **The cheapest engine on every push, every engine at night.** Where
+  the same steps run in more than one browser engine, a push runs them
+  in the one that costs least, and the night runs them in all of them,
+  with a failure there logged like any other.
 
 ## 12. CI holds the rules
 
@@ -731,6 +803,7 @@ wrong, and this skill wins:
 3. Nothing already tested it, or the old test was strengthened instead.
 4. It failed on the main branch, for the reason given, and passes now.
 5. It never waits, and nothing in it defeats the test cache.
-6. A change to tests or CI has its numbers against the main branch.
+6. A change to tests or CI has its numbers against the main branch, and
+   the end-to-end tests take no longer than they did there.
 7. CI passed on the last commit, and every rule here that CI does not
    check yet has an issue asking for the check.

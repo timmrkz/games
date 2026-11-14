@@ -1,6 +1,6 @@
 ---
 name: engineering
-description: What good engineering looks like in any project, the first principles every change follows. Think and verify before building, take away the cause and never only the symptom, one primitive per thing, untrusted input checked at the boundary, failures contained, one command to build, docs that say what the code does now, and numbers a person can compare. Read it before any change to code, build or CI, and before fixing anything.
+description: What good engineering looks like in any project, the first principles every change follows. Think and verify before building, take away the cause and never only the symptom, one primitive per thing, untrusted input checked at the boundary, failures contained, one command to build, every change knowing its speed, docs that say what the code does now, and numbers a person can compare. Read it before any change to code, build or CI, and before fixing anything.
 ---
 
 # Engineering
@@ -120,18 +120,52 @@ CI is where every pull request waits, and the user waits with it.
 - **Every job has a short limit, five minutes as a start,** setup
   included. A job that grows past it is split or loses the work that
   does not belong in it, never given a longer limit.
-- **A pull request runs only what its change reaches,** picked from the
-  diff. A push to main runs everything.
+- **A pull request starts only the jobs whose code it changed.** No
+  backend code changed, no backend tests. No client code changed, no
+  client tests. The end-to-end tests, which test the whole product, run
+  for either. The checks of the repository's own rules run on every pull
+  request, since they read the docs too, and a push to main runs
+  everything. Within a job, the test tool's own cache, restored from
+  main, runs only what changed. Picking finer by hand buys little and
+  costs a script to keep.
 - **A run for an old commit is stopped** when a new one comes, with
   `concurrency` and `cancel-in-progress`. Only what writes shared state
   is never stopped halfway, and CI on main keeps a result per commit.
 - **Expensive machines run only what differs on them.**
 - **What is long and blocks nothing runs by hand or at night,** never
   on every push.
-- **Every CI job is one command,** the same one a person runs. A check
-  is added to that command, never as a step of its own in a workflow.
+- **Every CI job is one command,** the same one a person runs, a target
+  of the one build command, with only what its machine needs around it,
+  the checkout and the tools. A check is added to that command, never as
+  a step of its own in a workflow. No script picks, runs or reports a
+  test: the build command runs them, and the test tool says what failed
+  at the end of its log.
+- **A workflow that writes is started only from main's own copy.** A
+  token that can comment, push or publish is never handed to code from a
+  branch nobody has reviewed yet, so no workflow runs on
+  `pull_request_target`. A check in CI holds that.
 
-## 8. Docs say what the code does now
+## 8. Every change knows its speed
+
+- **Every pull request says whether it makes the product faster, slower
+  or the same,** or CI when only the tests or the build change, before
+  the user has to ask. It is said in the pull request's bottom line, the
+  way the template lays it out, with how it is known in Proof.
+- **Ask it while the work goes on:** what now runs more often or less,
+  what waits on what, what is read, drawn or started again, what is held
+  in memory.
+- **A change on a path a person waits on is measured** before and after,
+  the way section 10 says, and the numbers go in Proof. CI is measured
+  by the times of the jobs the change reaches, against the last runs on
+  main.
+- **What cannot be timed is reasoned from the code,** said as reasoning,
+  never as a measurement, and Proof names what was not timed.
+- **Slower is not shipped** unless it buys something worth more, and the
+  user accepted that trade-off. The pull request names what got slower,
+  by how much and what it buys. Until the user agrees, the question is in
+  their list and the pull request is not ready to merge.
+
+## 9. Docs say what the code does now
 
 - **When behaviour changes, the doc that describes it changes in the same
   pull request.**
@@ -143,7 +177,7 @@ CI is where every pull request waits, and the user waits with it.
 - **One name per thing.** Whatever a thing is called in the interface,
   it is called that in the docs, the code and the comments too.
 
-## 9. A measurement a person can compare
+## 10. A measurement a person can compare
 
 Wherever numbers are put side by side, in a pull request, a reply or a
 doc:
@@ -172,4 +206,6 @@ doc:
 3. Nothing was copied that could have been extended.
 4. Input from outside is checked at the boundary.
 5. The build is clean and pinned, and CI stays under its limits.
-6. The docs say what the code does now.
+6. The change knows whether it is faster, slower or the same, and how
+   it knows, and a slower one has the user's yes.
+7. The docs say what the code does now.

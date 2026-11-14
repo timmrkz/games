@@ -43,8 +43,9 @@ and changed, and what shape we build toward.
   down the side for "may use", the path under each box's name, and its
   parts as small chips. It follows the reader's light or dark theme
   with `prefers-color-scheme`, on a background of its own, and names
-  only paths that exist. A change that moves a box changes its drawing
-  in the same pull request.
+  only paths that exist. A change that adds a part, moves a box, or
+  changes what a box holds or how it is reached changes its drawing in
+  the same pull request, as it changes the line in the file.
 - **A line is added only for a new kind of thing:** a new part, a new
   home for state, a new boundary. A change that brings one adds its line
   in the same pull request. Rewording is not a change of the
@@ -80,6 +81,12 @@ and changed, and what shape we build toward.
   are needed, by the part that owns the state.
 - **State that outlives one request or one job** has a home that lives as
   long, made once and handed in, never a global or a package variable.
+- **What the program reaches outside itself is handed in once,** at the
+  program's start: the clock, the disk, the network, a keychain, the
+  system's hardware. It is one primitive each, one clock for every kind
+  of wait rather than a new shape for each use. What a test makes gets
+  none of them, or a stand-in it drives, so nothing decides by itself
+  whether a test is running or which system it is on.
 
 ## 4. The shape we build toward: the server owns, the client renders
 
@@ -122,6 +129,17 @@ What follows from it:
 - **The API is a boundary.** Its shapes are written once, on the server,
   and the client's types are made from them, never written by hand
   beside them. A change to it says what the client relies on.
+- **The channel between them is named once and tested alone.** Every
+  call and every message the server sends unasked is a name written in
+  one place, typed with what it carries, so a part cannot send the wrong
+  data on a name. A test holds the two sides to each other, the names
+  and every field, both ways, without a browser. The end-to-end tests
+  then only check what a person does and sees, and a name wrong on one
+  side fails in seconds, not in the product.
+- **The server sends what changed, not everything each time,** once a
+  state grows past what is cheap to send whole. The sender remembers
+  what it sent, and the client's transport makes the state whole again,
+  so nothing past the transport knows.
 - **The database comes when it is needed, and only the server sees it.**
   Plain files are fine until two writers, a query or a size make them
   wrong. The client never knows what the storage is.
@@ -208,6 +226,7 @@ with a link to the new one.
 | keep a copy of the state in the client and sync it | two homes for one state, and every order of events is a new bug | the client shows what the server last sent, section 4 |
 | an optimistic update that the client works out | the client then holds a rule | the client shows that the action is under way, the server's answer shows the result |
 | follow the pattern in the code next to the change | that code may be what Not to copy names | the architecture file, section 5 |
+| test the channel between server and client through the end-to-end tests | a name wrong on one side passes every test that wires its own copy, and the slowest tests carry checks a unit test makes in milliseconds | the channel named once and tested alone, section 4 |
 | write a decision down after it is built | the alternatives are gone by then | five simulations before the code, section 6 |
 | a database from the start | a moving part nothing needs yet | plain files until they are wrong, section 4 |
 
