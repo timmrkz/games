@@ -501,15 +501,17 @@
     {
       "id": "beach-ball",
       "title": "Beach Ball",
-      "summary": "Keep the beach ball under water. The bottom player has to get their head up through any gap the top player leaves.",
-      "setup": "Bottom player in bear stance, on hands and feet with the knees off the mat. Top player in front of them with their chest on the back of the bottom player's head and their forearms in the bottom player's armpits.",
-      "goal": "Bottom: get your head up and out through whatever gap the top player leaves.\nTop: keep the head down and close every gap.",
-      "winCondition": "The bottom player scores when their head comes up out from under the top player's chest. The top player scores by keeping the ball under water for 30 seconds.",
+      "summary": "Keep the beach ball under water. The bottom player has to pop back up, free the head and both hands and stand.",
+      "setup": "Bottom player on all fours, hands and feet on the mat, stable like a table. Top player standing in front of them, as in a front headlock, but with both arms around the body right under the armpits and no closed grip.",
+      "goal": "Bottom: get your head up, get both hands off the mat and stand up.\nTop: keep the bottom player down.",
+      "winCondition": "The bottom player scores by standing up with the head up and both hands free. The top player scores by keeping the ball under water for 30 seconds.",
       "resetRule": "Back to the start position after every score. Swap roles every round.",
       "variations": [
-        "For the minis, the bottom player starts on their knees instead of in bear stance, because holding bear stance is hard and tiring for them. The goal stays the same.",
-        "The top player has to keep their knees off the mat, so they have to move with the bottom player instead of lying on them.",
+        "For the minis, the bottom player starts on their knees instead of on hands and feet, because holding that is hard and tiring for them. The goal stays the same.",
         "The bottom player may only move their hands and feet sideways, so they have to circle out of the gap instead of pushing straight up."
+      ],
+      "solutions": [
+        "Open the door: put one knee on the mat for a stable base, then turn the upper body and drive one elbow upwards, like kicking open a door. The elbow and upper arm push the top player's arm out of the way on that side, and you dive up through the hole you punched."
       ],
       "story": "The meerkats want to stick their heads up high and keep watch. In German they are Erdmännchen. Or the beach ball keeps trying to pop back up to the surface.",
       "labels": [
@@ -517,11 +519,13 @@
         "midi",
         "maxi",
         "adult",
+        "wrestling",
+        "self-defense",
         "front-headlock",
-        "wrestling"
+        "stand-up"
       ],
       "createdAt": "2026-10-11T00:00:00.000Z",
-      "updatedAt": "2026-10-11T00:00:00.000Z"
+      "updatedAt": "2026-11-14T00:00:00.000Z"
     },
     {
       "id": "lumberjack",
