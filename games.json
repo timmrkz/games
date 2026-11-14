@@ -669,6 +669,27 @@
       ],
       "createdAt": "2026-11-14T00:00:00.000Z",
       "updatedAt": "2026-11-14T00:00:00.000Z"
+    },
+    {
+      "id": "rear-body-lock-escape",
+      "title": "Rear Body Lock Escape",
+      "summary": "Standing rear body lock. The bottom player has to open the lock and turn to face the top player, keeping hold of one arm.",
+      "setup": "Both players standing. The bottom player stands in front, the top player behind them with a rear body lock.",
+      "goal": "Bottom: open the body lock, turn to face the top player and keep control of one arm while turning.\nTop: hold on to the body lock.",
+      "winCondition": "The bottom player wins by facing the top player while controlling one of their arms. The top player wins by holding on for 10 seconds.",
+      "resetRule": "Back to a new body lock after every win. Swap roles each round.",
+      "variations": [],
+      "solutions": [
+        "Strip the grip: get both thumbs into any gap you find around the top player's wrist. Push down with your hands and arms to take the slack out of the grip. Once the slack is out, change levels and drop all your weight into the grip, then break it open with a small hip bump. Leaning backwards makes it work even better, but it is a dilemma: a top player who sees it coming can let go and pull the leaning player to the ground, and then it becomes a scramble."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "self-defense"
+      ],
+      "createdAt": "2026-11-14T00:00:00.000Z",
+      "updatedAt": "2026-11-14T00:00:00.000Z"
     }
   ]
 }
