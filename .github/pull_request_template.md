@@ -4,9 +4,9 @@ short sentences, no semicolons. The opening, Root cause and The fix are
 brief and concrete: at most 30 words for each issue the pull request
 works on, one short paragraph per issue. A pull request for three issues
 has three paragraphs in each of the three. Proof may say as much as it
-needs. The bottom line, Preview, How to test and Found along the way are
-always there, Preview unless nothing the user can open changes. Leave
-out any other section that has nothing to say. See the pull-requests
+needs. The bottom line, How to test and Found along the way are always
+there, and so is Preview, as its comment says. Leave out any other
+section that has nothing to say. See the pull-requests
 skill in .claude/skills/.
 -->
 

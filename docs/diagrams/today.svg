@@ -57,7 +57,7 @@
 <text class="c" x="428" y="315">ids removed here</text>
 <rect class="dash" x="64" y="360" width="672" height="94" rx="8"/>
 <text class="n" x="76" y="382">hosting</text>
-<text class="p" x="76" y="400">GitHub Pages, CNAME</text>
+<text class="p" x="76" y="400">GitHub Pages, CNAME. A pull request: raw.githack.com</text>
 <rect class="chip" x="76" y="410" width="211" height="22" rx="6"/>
 <text class="c" x="84" y="425">static files, no server of ours</text>
 </svg>
