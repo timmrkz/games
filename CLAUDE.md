@@ -45,6 +45,7 @@ Where a skill meets this repository:
 | a path a person waits on | the page loading `games.json`, filtering by labels, opening a game, and printing cards |
 | the work's own answer on its speed | the Speed line of the pull request's bottom line, and Proof for how it is known |
 | a trade-off the user accepted | the user's yes in the thread |
+| a preview of a pull request | `https://raw.githack.com/timmrkz/games/<branch>/index.html`, with the branch name as it is, slashes included. It serves the branch's own files on a domain of its own, so it keeps its saved edits apart from the live site's. Nothing to set up |
 | CI | none yet. Until there is, the checks a pull request names run in the session, and Proof says so |
 
 ## How the user works

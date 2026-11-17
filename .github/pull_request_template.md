@@ -4,9 +4,10 @@ short sentences, no semicolons. The opening, Root cause and The fix are
 brief and concrete: at most 30 words for each issue the pull request
 works on, one short paragraph per issue. A pull request for three issues
 has three paragraphs in each of the three. Proof may say as much as it
-needs. The bottom line, How to test and Found along the way are always
-there. Leave out any other section that has nothing to say. See the
-pull-requests skill in .claude/skills/.
+needs. The bottom line, Preview, How to test and Found along the way are
+always there, Preview unless nothing the user can open changes. Leave
+out any other section that has nothing to say. See the pull-requests
+skill in .claude/skills/.
 -->
 
 <!--
@@ -62,6 +63,15 @@ measurements before and after that the speed line stands on, and
 whether CI passed on the last commit.
 What could not be checked here is said. This section may be as long as
 the proof needs.
+-->
+
+## Preview
+
+<!--
+One link that opens the change as this pull request has it, so the user
+can try it with one click. Where the project says how to make the link,
+see CLAUDE.md. Leave it out only when nothing the user can open
+changes, and say so in How to test.
 -->
 
 ## How to test
