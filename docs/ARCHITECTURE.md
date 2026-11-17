@@ -17,7 +17,9 @@ says both. New code is written for the second.
 ![The page today: one file holds every layer](diagrams/today.svg)
 
 The page is served as static files by GitHub Pages, at the domain in
-`CNAME`. There is no build step and no server of our own. The page loads
+`CNAME`. A pull request's version is served from its branch by
+raw.githack.com, at the link CLAUDE.md gives, on a domain of its own.
+There is no build step and no server of our own. The page loads
 `games.json`, or its own frozen built-in catalog when there is none, lays
 what this browser changed on top of it from `localStorage`, and draws the
 result. An export writes the merged

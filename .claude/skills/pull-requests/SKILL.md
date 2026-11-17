@@ -86,6 +86,9 @@ in the proof.
 - **Proof** says which tests fail on main and pass here, the numbers
   before and after that the speed line stands on, and whether CI passed
   on the last commit.
+- **Preview is a link that opens the change as the pull request has
+  it,** where the project names a way to make one, so the user tries it
+  with one click instead of setting it up.
 - **How to test is what the user reads first,** so it is never left out.
   Each step is one they can take as it stands. A short Before and After
   is no replacement for it.
