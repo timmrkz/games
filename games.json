@@ -690,6 +690,31 @@
       ],
       "createdAt": "2026-11-14T00:00:00.000Z",
       "updatedAt": "2026-11-14T00:00:00.000Z"
+    },
+    {
+      "id": "rear-body-lock-takedown",
+      "title": "Rear Body Lock Takedown",
+      "summary": "Standing rear body lock with a gable grip. The top player has to take the bottom player down without opening the grip.",
+      "setup": "Both players standing. The bottom player stands upright in front, the top player behind them with a rear body lock and a gable grip.",
+      "goal": "Top: take the bottom player down without opening the gable grip.\nBottom: stay on your feet.",
+      "winCondition": "The top player wins with a takedown while the grip stays closed. The bottom player wins when the top player opens the grip, or by staying on their feet for 30 seconds.",
+      "resetRule": "Back to a new rear body lock after every win. Swap roles each round.",
+      "variations": [],
+      "solutions": [
+        "Foot sweep: say your right arm is in front around the waist, the right hand on top of the left in the gable grip, the left elbow pressing on your partner's hip and your right ear on their back. Move your partner around. Step with your right foot close to the outside of their right foot, so they make a big step back with their left foot to keep their balance. Do this 2 or 3 times to get the timing, then sweep their left foot with your left foot and block that step back.",
+        "Defending the foot sweep: when the sweep comes, lift your left knee. The sweep misses your foot and you keep your balance.",
+        "Distraction: before the sweep, give a cue with your right foot on your partner's right foot. Right after it, sweep with your left foot. The cue draws their attention to the right side and makes the sweep on the left very hard to defend."
+      ],
+      "story": "",
+      "labels": [
+        "midi",
+        "maxi",
+        "adult",
+        "wrestling",
+        "foot-sweep"
+      ],
+      "createdAt": "2026-11-17T00:00:00.000Z",
+      "updatedAt": "2026-11-17T00:00:00.000Z"
     }
   ]
 }
