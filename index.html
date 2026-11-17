@@ -31,6 +31,8 @@
   --alert:#E4705F;       /* "hide" / destructive: warm coral */
   --alert-soft:#38221F;
   --r:3px;
+  --tag-line:16px;                                     /* one line of a label */
+  --tag-h:calc(var(--tag-line) + 6px);                 /* a label: line, 2px padding and 1px border, top and bottom */
   --chip-track:repeat(auto-fill,minmax(140px,1fr));   /* labels page grid */
   --display:"Archivo",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,sans-serif;
@@ -155,12 +157,16 @@ h1,h2,h3{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15}
 .card-open{flex:1;display:flex;flex-direction:column;gap:8px;align-items:flex-start;
   background:transparent;border:0;padding:0;text-align:left;color:inherit;width:100%}
 .card h3{font-size:16.5px;font-weight:700;letter-spacing:-0.005em}
-.card p{margin:0;font-size:13.5px;color:var(--ink-soft)}
-.card .meta{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px}
+/* A card shows at most two lines of the summary and two rows of labels, so
+   no card runs taller than its neighbours. The game page shows them all. */
+.card p{margin:0;font-size:13.5px;color:var(--ink-soft);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.card .meta{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px;
+  max-height:calc(2 * var(--tag-h) + 5px + 4px);overflow:hidden}
 .tag-btn{cursor:pointer;font-family:var(--mono)}
 .tag-btn:hover{border-color:var(--accent);color:var(--accent)}
 .tag-btn.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.tag{font-family:var(--mono);font-size:10.5px;background:var(--panel-2);border:1px solid var(--line-soft);padding:2px 6px;border-radius:2px;color:var(--ink-soft)}
+.tag{font-family:var(--mono);font-size:10.5px;line-height:var(--tag-line);background:var(--panel-2);border:1px solid var(--line-soft);padding:2px 6px;border-radius:2px;color:var(--ink-soft)}
 .empty{border:1px dashed var(--line);border-radius:var(--r);padding:38px 24px;text-align:center;background:var(--panel)}
 .empty h3{font-size:17px;margin-bottom:6px}
 .empty p{color:var(--ink-soft);font-size:14px;margin:0 0 16px}
@@ -1662,7 +1668,10 @@ function renderResults(){
 /** One game's card. `shown` limits the labels on it, for a related game,
     which shows only the labels it shares. */
 function cardHTML(game, shown){
-  const ids = Array.isArray(shown) ? shown : gameLabels(game);
+  // Labels in the filter come first, so the two rows a card shows never
+  // hide one the person picked.
+  const all = Array.isArray(shown) ? shown : gameLabels(game);
+  const ids = all.filter(inChain).concat(all.filter(id => !inChain(id)));
 
   // A card is no longer one big button, because the labels inside it are
   // buttons of their own and a button cannot contain another one.
