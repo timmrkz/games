@@ -1668,7 +1668,10 @@ function renderResults(){
 /** One game's card. `shown` limits the labels on it, for a related game,
     which shows only the labels it shares. */
 function cardHTML(game, shown){
-  const ids = Array.isArray(shown) ? shown : gameLabels(game);
+  // Labels in the filter come first, so the two rows a card shows never
+  // hide one the person picked.
+  const all = Array.isArray(shown) ? shown : gameLabels(game);
+  const ids = all.filter(inChain).concat(all.filter(id => !inChain(id)));
 
   // A card is no longer one big button, because the labels inside it are
   // buttons of their own and a button cannot contain another one.
