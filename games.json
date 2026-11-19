@@ -725,10 +725,10 @@
     {
       "id": "hands-down",
       "title": "Hands Down",
-      "summary": "Standing grip fight. Get both of your partner's hands onto the mat, using a 2-on-1 on the way.",
+      "summary": "Standing grip fight. Get one of your partner's hands onto the mat, using a 2-on-1 on the way.",
       "setup": "Both players standing and facing each other, no grips.",
-      "goal": "Get both of your partner's hands onto the mat, using a 2-on-1, both of your hands on one of their arms.",
-      "winCondition": "A player scores when both of their partner's hands touch the mat and a 2-on-1 was part of the move that got them there. Hands on the mat without a 2-on-1 do not score.",
+      "goal": "Get one of your partner's hands onto the mat, using a 2-on-1, both of your hands on one of their arms.",
+      "winCondition": "A player scores when one of their partner's hands touches the mat and a 2-on-1 was part of the move that got them there. A hand on the mat without a 2-on-1 does not score.",
       "resetRule": "Back to standing, facing each other with no grips, after every score.",
       "variations": [],
       "solutions": [
